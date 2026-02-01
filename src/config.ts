@@ -1,7 +1,7 @@
 // Конфигурация API
 export const API_CONFIG = {
     // Твой ngrok URL
-    baseURL: 'https://ramiro-unquestioned-semidependently.ngrok-free.dev',
+    baseURL: 'https://warcraft-evaluation-yes-whats.trycloudflare.com',
     endpoints: {
         businesses: '/api/businesses',
         activity: '/api/activity',
