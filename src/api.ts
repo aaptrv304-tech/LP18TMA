@@ -61,37 +61,81 @@ export interface Recommendation {
 // Функции для получения данных
 export const fetchBusinesses = async (): Promise<BusinessResponse> => {
     const url = getAPIUrl('/api/businesses');
-    const response = await fetch(url);
+    console.log('📡 Запрос к:', url);
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        mode: 'cors',
+    });
+
     if (!response.ok) {
-        throw new Error('Failed to fetch businesses');
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
     }
+
     return response.json();
 };
 
 export const fetchActivity = async (): Promise<{ activities: Activity[] }> => {
     const url = getAPIUrl('/api/activity');
-    const response = await fetch(url);
+    console.log('📡 Запрос к:', url);
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        mode: 'cors',
+    });
+
     if (!response.ok) {
-        throw new Error('Failed to fetch activity');
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
     }
+
     return response.json();
 };
 
 export const fetchAchievements = async (): Promise<{ achievements: Achievement[] }> => {
     const url = getAPIUrl('/api/achievements');
-    const response = await fetch(url);
+    console.log('📡 Запрос к:', url);
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        mode: 'cors',
+    });
+
     if (!response.ok) {
-        throw new Error('Failed to fetch achievements');
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
     }
+
     return response.json();
 };
 
 export const fetchRecommendations = async (): Promise<{ recommendations: Recommendation[] }> => {
     const url = getAPIUrl('/api/recommendations');
-    const response = await fetch(url);
+    console.log('📡 Запрос к:', url);
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        mode: 'cors',
+    });
+
     if (!response.ok) {
-        throw new Error('Failed to fetch recommendations');
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
     }
+
     return response.json();
 };
 
@@ -99,7 +143,10 @@ export const fetchRecommendations = async (): Promise<{ recommendations: Recomme
 export const checkBackendHealth = async (): Promise<boolean> => {
     try {
         const url = getAPIUrl('/health');
-        const response = await fetch(url);
+        const response = await fetch(url, {
+            method: 'GET',
+            mode: 'cors',
+        });
         return response.ok;
     } catch (error) {
         console.error('Backend health check failed:', error);

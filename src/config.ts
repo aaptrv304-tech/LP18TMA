@@ -1,6 +1,6 @@
 // Конфигурация API
 export const API_CONFIG = {
-    // Замени на свой ngrok URL
+    // Твой ngrok URL
     baseURL: 'https://ramiro-unquestioned-semidependently.ngrok-free.dev',
     endpoints: {
         businesses: '/api/businesses',

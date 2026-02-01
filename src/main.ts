@@ -48,6 +48,9 @@ const loadAllData = async () => {
   try {
     console.log('📥 Загрузка данных с бэкенда...');
 
+    // Показываем лоадер
+    showLoader(true);
+
     // Загружаем заведения и статистику
     const businessesData = await fetchBusinesses();
     renderBusinesses(businessesData);
@@ -65,9 +68,26 @@ const loadAllData = async () => {
     renderRecommendations(recommendationsData.recommendations);
 
     console.log('✅ Все данные загружены');
-  } catch (error) {
+  } catch (error: any) {
     console.error('❌ Ошибка загрузки данных:', error);
-    showError('Не удалось загрузить данные. Проверьте подключение к серверу.');
+
+    // Детальное логирование ошибки
+    let errorMessage = 'Не удалось загрузить данные';
+    if (error.message) {
+      errorMessage += `: ${error.message}`;
+    }
+    if (error.cause) {
+      errorMessage += ` (причина: ${error.cause})`;
+    }
+
+    showError(errorMessage);
+
+    // Для отладки — покажем полную ошибку в консоли
+    if (window.Telegram?.WebApp) {
+      window.Telegram.WebApp.showAlert(`Ошибка: ${errorMessage}\nПроверь консоль для деталей`);
+    }
+  } finally {
+    showLoader(false);
   }
 };
 
@@ -126,7 +146,7 @@ const renderBusinesses = (data: BusinessResponse) => {
         <div class="business-card bg-white rounded-2xl p-4 shadow-sm border border-gray-100 ${business.has_reward ? 'ring-2 ring-green-100' : ''}">
           <div class="flex gap-3">
             <div class="relative">
-              <div class="w-14 h-14 bg-gradient-to-br from-${getCategoryColor(business.category_emoji)} rounded-full flex items-center justify-center text-white text-xl font-bold">
+              <div class="w-14 h-14 bg-gradient-to-br from-${getCategoryColor(business.category_emoji)}-400 to-${getCategoryColor(business.category_emoji)}-600 rounded-full flex items-center justify-center text-white text-xl font-bold">
                 ${business.initial}
               </div>
               ${business.is_favorite ? `
@@ -195,7 +215,7 @@ const renderActivity = (activities: Activity[]) => {
       const activityHTML = `
         <div class="p-4 flex items-center gap-3">
           <div class="w-10 h-10 bg-${activity.color}-50 rounded-full flex items-center justify-center flex-shrink-0">
-            <i class="fa-solid ${activity.icon} text-${activity.color} text-sm"></i>
+            <i class="fa-solid ${activity.icon} text-${activity.color}-600 text-sm"></i>
           </div>
           <div class="flex-1 min-w-0">
             <p class="text-textPrimary font-medium text-sm">
@@ -203,7 +223,7 @@ const renderActivity = (activities: Activity[]) => {
             </p>
             <p class="text-textSecondary text-xs">${activity.business_name} • ${activity.date}</p>
           </div>
-          <p class="text-${activity.color} font-bold text-base flex-shrink-0">${activity.points > 0 ? '+' : ''}${activity.points}</p>
+          <p class="text-${activity.color}-600 font-bold text-base flex-shrink-0">${activity.points > 0 ? '+' : ''}${activity.points}</p>
         </div>
       `;
       activitySection.innerHTML += activityHTML;
@@ -281,7 +301,15 @@ const getCategoryColor = (emoji: string): string => {
 };
 
 const showError = (message: string) => {
+  console.error('❌ Ошибка:', message);
   alert(`Ошибка: ${message}`);
+};
+
+const showLoader = (show: boolean) => {
+  // TODO: Добавить визуальный лоадер позже
+  if (show) {
+    console.log('⏳ Загрузка...');
+  }
 };
 
 const setupEventListeners = () => {
@@ -290,7 +318,7 @@ const setupEventListeners = () => {
   businessCards.forEach((card, index) => {
     card.addEventListener('click', () => {
       console.log(`🏢 Клик по карточке #${index + 1}`);
-      alert(`Вы выбрали заведение #${index + 1}`);
+      alert(`Вы выбрали заведение "${card.querySelector('h3')?.textContent}"`);
     });
   });
 
@@ -337,4 +365,4 @@ const setupEventListeners = () => {
 };
 
 // Запуск приложения
-initHomePage();
+initHomePage().catch(console.error);
