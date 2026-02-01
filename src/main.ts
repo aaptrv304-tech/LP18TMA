@@ -1,24 +1,33 @@
-import './style.css'
-import typescriptLogo from './typescript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.ts'
+// Подключение к Telegram Web App
+declare global {
+  interface Window {
+    Telegram?: {
+      WebApp?: any;
+    };
+  }
+}
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://www.typescriptlang.org/" target="_blank">
-      <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
-    </a>
-    <h1>Vite + TypeScript</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite and TypeScript logos to learn more
-    </p>
-  </div>
-`
+// Инициализация приложения
+const initApp = () => {
+  console.log('🚀 Приложение запущено!');
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+  // Проверяем доступность Telegram WebApp
+  if (window.Telegram?.WebApp) {
+    const tg = window.Telegram.WebApp;
+
+    // Настройки внешнего вида
+    tg.expand();
+
+    console.log('✅ Telegram WebApp подключен');
+    console.log('User ID:', tg.initDataUnsafe?.user?.id);
+    console.log('Username:', tg.initDataUnsafe?.user?.username);
+
+    // Можно показать уведомление
+    tg.showAlert('Добро пожаловать в программу лояльности!');
+  } else {
+    console.warn('⚠️ Telegram WebApp не обнаружен (работаем в браузере)');
+  }
+};
+
+// Запуск приложения
+initApp();
