@@ -2,487 +2,522 @@
 <html lang="ru">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#FFF8E1">
-  <title>БонусБот - Программа лояльности</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            'coffee-dark': '#3E2723',
-            'coffee-medium': '#5D4037',
-            'coffee-light': '#8D6E63',
-            'cream': '#FFF8E1',
-            'latte': '#FFECB3',
-            'espresso': '#4E342E',
-            'caramel': '#D7A86E',
-            'mocha': '#A1887F'
-          },
-          fontFamily: {
-            'sans': ['Inter', 'system-ui', 'sans-serif']
-          }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#FF6B35">
+    <title>БонусБот - Главная</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF6B35',
+                        secondary: '#FFF8E7',
+                        textPrimary: '#2C2C2C',
+                        textSecondary: '#666666',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
         }
-      }
-    }
-  </script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-    rel="stylesheet">
-  <style>
-    ::-webkit-scrollbar {
-      display: none;
-    }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar {
+            display: none;
+        }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      margin: 0;
-      padding: 0;
-      overscroll-behavior-y: contain;
-    }
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            overscroll-behavior-y: contain;
+        }
 
-    .slide {
-      display: none;
-      flex-direction: column;
-      height: 100vh;
-      width: 100%;
-    }
+        .gradient-card {
+            background: linear-gradient(135deg, #FF6B35 0%, #FFB88C 50%, #FFF8E7 100%);
+        }
 
-    .slide.active {
-      display: flex;
-    }
+        .business-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
 
-    .progress-dot {
-      transition: all 0.3s ease;
-      border-radius: 999px;
-    }
+        .business-card:active {
+            transform: scale(0.98);
+        }
 
-    .progress-dot.active {
-      background-color: #5D4037;
-      width: 24px;
-    }
-
-    .swipe-indicator {
-      animation: swipe 2s infinite;
-    }
-
-    @keyframes swipe {
-
-      0%,
-      100% {
-        transform: translateX(0);
-        opacity: 1;
-      }
-
-      50% {
-        transform: translateX(10px);
-        opacity: 0.5;
-      }
-    }
-
-    .fade-in {
-      animation: fadeIn 0.5s ease-in;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .bounce-in {
-      animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    }
-
-    @keyframes bounceIn {
-      0% {
-        transform: scale(0.3);
-        opacity: 0;
-      }
-
-      50% {
-        transform: scale(1.05);
-      }
-
-      70% {
-        transform: scale(0.9);
-      }
-
-      100% {
-        transform: scale(1);
-        opacity: 1;
-      }
-    }
-
-    .animate-pulse {
-      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    }
-
-    @keyframes pulse {
-
-      0%,
-      100% {
-        opacity: 1;
-      }
-
-      50% {
-        opacity: .5;
-      }
-    }
-  </style>
+        .category-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+    </style>
 </head>
 
-<body class="bg-gradient-to-b from-cream to-latte overflow-x-hidden">
+<body class="bg-[#FAFAFA]">
+    <div id="app-container" class="w-full max-w-[375px] mx-auto bg-white min-h-screen pb-[76px]">
 
-  <div id="onboarding-container" class="w-full h-full relative">
-
-    <!-- Slide 1 -->
-    <div id="slide-1" class="slide active">
-      <div class="flex flex-col items-center flex-1 justify-center px-6 py-8">
-        <div
-          class="w-32 h-32 bg-gradient-to-br from-coffee-medium to-coffee-dark rounded-full flex items-center justify-center mb-6 bounce-in shadow-2xl">
-          <i class="fa-solid fa-mug-hot text-6xl text-latte"></i>
-        </div>
-
-        <div class="absolute top-24 right-8 bounce-in" style="animation-delay: 0.2s;">
-          <div class="w-12 h-12 bg-caramel rounded-full flex items-center justify-center shadow-lg">
-            <i class="fa-solid fa-star text-xl text-white"></i>
-          </div>
-        </div>
-
-        <div class="absolute top-32 left-8 bounce-in" style="animation-delay: 0.4s;">
-          <div class="w-10 h-10 bg-coffee-light rounded-full flex items-center justify-center shadow-lg">
-            <i class="fa-solid fa-gift text-lg text-white"></i>
-          </div>
-        </div>
-
-        <div class="bg-white/80 backdrop-blur-sm rounded-2xl px-6 py-4 mb-6 shadow-lg fade-in">
-          <p class="text-coffee-dark text-lg font-semibold text-center">Coffeeshop Downtown</p>
-        </div>
-
-        <h1 class="text-3xl font-bold text-coffee-dark text-center mb-4 fade-in">Добро пожаловать в БонусБот!</h1>
-
-        <p class="text-coffee-medium text-center text-lg leading-relaxed px-4 fade-in">Собирайте баллы за каждый визит и
-          получайте награды</p>
-
-        <div class="mt-8 bg-gradient-to-r from-coffee-medium to-coffee-dark rounded-2xl px-8 py-6 shadow-xl fade-in">
-          <div class="flex items-center justify-center space-x-3">
-            <i class="fa-solid fa-coins text-3xl text-caramel"></i>
-            <div>
-              <p class="text-white text-sm">Начните с</p>
-              <p class="text-caramel text-2xl font-bold">+50 баллов</p>
+        <!-- Header -->
+        <header id="header"
+            class="fixed top-0 left-0 right-0 max-w-[375px] mx-auto bg-white z-50 px-4 py-3 flex items-center justify-between shadow-sm">
+            <div class="flex items-center gap-2">
+                <div
+                    class="w-10 h-10 bg-gradient-to-br from-primary to-orange-400 rounded-lg flex items-center justify-center">
+                    <div class="w-6 h-6 border-2 border-white rounded transform rotate-45"></div>
+                </div>
+                <span class="text-xl font-bold text-textPrimary">БонусБот</span>
             </div>
-          </div>
-        </div>
-      </div>
+            <button class="w-10 h-10 flex items-center justify-center relative">
+                <i class="fa-regular fa-bell text-xl text-textPrimary"></i>
+                <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+            </button>
+        </header>
 
-      <div class="px-6 pb-8 space-y-4">
-        <div class="flex justify-center items-center space-x-2 mb-6">
-          <div class="progress-dot active h-2 w-6 bg-coffee-medium"></div>
-          <div class="progress-dot h-2 w-2 bg-coffee-light/30"></div>
-          <div class="progress-dot h-2 w-2 bg-coffee-light/30"></div>
-          <div class="progress-dot h-2 w-2 bg-coffee-light/30"></div>
-        </div>
+        <!-- Main Content -->
+        <main id="main-content" class="pt-[64px]">
 
-        <button onclick="window.nextSlide()"
-          class="w-full bg-gradient-to-r from-coffee-medium to-coffee-dark text-white py-4 rounded-2xl font-semibold text-lg shadow-xl active:scale-95 transition-transform flex items-center justify-center space-x-2">
-          <span>Далее</span>
-          <i class="fa-solid fa-arrow-right swipe-indicator"></i>
-        </button>
+            <!-- Summary Card -->
+            <section id="summary-card-section" class="px-4 pt-4 pb-6">
+                <div class="gradient-card rounded-2xl p-6 shadow-lg">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <p class="text-white/90 text-sm font-medium mb-1">Всего баллов</p>
+                            <h1 class="text-white text-5xl font-bold mb-2">1,245</h1>
+                            <p class="text-white/80 text-sm">В 5 заведениях</p>
+                        </div>
+                        <div
+                            class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                            <i class="fa-solid fa-coins text-white text-2xl"></i>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 mt-6 pt-4 border-t border-white/20">
+                        <div class="flex items-center gap-2 flex-1">
+                            <div
+                                class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center backdrop-blur-sm">
+                                <i class="fa-solid fa-star text-white text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="text-white text-base font-semibold">12</p>
+                                <p class="text-white/70 text-xs">визитов</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 flex-1">
+                            <div
+                                class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center backdrop-blur-sm">
+                                <i class="fa-solid fa-gift text-white text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="text-white text-base font-semibold">3</p>
+                                <p class="text-white/70 text-xs">награды</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-        <button onclick="window.skipOnboarding()"
-          class="w-full text-coffee-medium py-3 font-medium text-base">Пропустить</button>
-      </div>
+            <!-- Filter Section -->
+            <section id="filter-section" class="px-4 pb-4">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-textPrimary text-xl font-bold">Мои заведения</h2>
+                    <button class="flex items-center gap-1 text-textSecondary text-sm font-medium">
+                        <span>По балансу</span>
+                        <i class="fa-solid fa-chevron-down text-xs"></i>
+                    </button>
+                </div>
+                <div class="flex gap-2 overflow-x-auto pb-2">
+                    <button class="px-4 py-2 bg-primary text-white rounded-full text-sm font-medium whitespace-nowrap">
+                        Все
+                    </button>
+                    <button
+                        class="px-4 py-2 bg-white border border-gray-200 text-textSecondary rounded-full text-sm font-medium whitespace-nowrap flex items-center gap-1">
+                        <i class="fa-solid fa-star text-yellow-500 text-xs"></i>
+                        Любимые
+                    </button>
+                    <button
+                        class="px-4 py-2 bg-white border border-gray-200 text-textSecondary rounded-full text-sm font-medium whitespace-nowrap">
+                        Недавние
+                    </button>
+                </div>
+            </section>
+
+            <!-- Business List -->
+            <section id="business-list-section" class="px-4 pb-4 space-y-3">
+                <!-- Кофейня Уют -->
+                <div class="business-card bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+                    <div class="flex gap-3">
+                        <div class="relative">
+                            <div
+                                class="w-14 h-14 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center text-white text-xl font-bold">
+                                К
+                            </div>
+                            <button
+                                class="absolute -top-1 -right-1 w-5 h-5 bg-yellow-400 rounded-full flex items-center justify-center">
+                                <i class="fa-solid fa-star text-white text-xs"></i>
+                            </button>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-start justify-between gap-2 mb-1">
+                                <h3 class="text-textPrimary font-semibold text-base leading-tight">
+                                    Кофейня Уют
+                                </h3>
+                                <div class="text-right flex-shrink-0">
+                                    <p class="text-primary text-xl font-bold leading-none">450</p>
+                                    <p class="text-textSecondary text-xs">баллов</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 mb-2">
+                                <span
+                                    class="category-badge px-2 py-0.5 bg-orange-50 text-orange-600 rounded-md text-xs font-medium">
+                                    <span>🍕</span><span>Кафе</span>
+                                </span>
+                                <span class="text-textSecondary text-xs">•</span>
+                                <span class="text-textSecondary text-xs">ул. Ленина, 15</span>
+                            </div>
+                            <p class="text-textSecondary text-xs mb-2">Последний визит: Вчера в 15:30</p>
+                            <div class="space-y-1">
+                                <div class="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                                    <div class="bg-primary h-full rounded-full" style="width: 90%"></div>
+                                </div>
+                                <p class="text-textSecondary text-xs">50 баллов до награды</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Салон Красоты Люкс -->
+                <div
+                    class="business-card bg-white rounded-2xl p-4 shadow-sm border border-gray-100 ring-2 ring-green-100">
+                    <div class="flex gap-3">
+                        <div class="relative">
+                            <div
+                                class="w-14 h-14 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center text-white text-xl font-bold">
+                                С
+                            </div>
+                            <div
+                                class="absolute -top-1 -right-1 w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
+                                <i class="fa-solid fa-gift text-white text-xs"></i>
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-start justify-between gap-2 mb-1">
+                                <h3 class="text-textPrimary font-semibold text-base leading-tight">
+                                    Салон Красоты Люкс
+                                </h3>
+                                <div class="text-right flex-shrink-0">
+                                    <p class="text-primary text-xl font-bold leading-none">820</p>
+                                    <p class="text-textSecondary text-xs">баллов</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 mb-2">
+                                <span
+                                    class="category-badge px-2 py-0.5 bg-purple-50 text-purple-600 rounded-md text-xs font-medium">
+                                    <span>✂️</span><span>Салон</span>
+                                </span>
+                                <span class="text-textSecondary text-xs">•</span>
+                                <span class="text-textSecondary text-xs">500м</span>
+                            </div>
+                            <p class="text-textSecondary text-xs mb-2">Последний визит: 3 дня назад</p>
+                            <div class="space-y-1">
+                                <div class="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                                    <div class="bg-green-500 h-full rounded-full" style="width: 100%"></div>
+                                </div>
+                                <p class="text-green-600 text-xs font-medium">🎉 Награда доступна!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Магазин "Продукты 24" -->
+                <div class="business-card bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+                    <div class="flex gap-3">
+                        <div class="relative">
+                            <div
+                                class="w-14 h-14 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white text-xl font-bold">
+                                М
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-start justify-between gap-2 mb-1">
+                                <h3 class="text-textPrimary font-semibold text-base leading-tight">
+                                    Магазин "Продукты 24"
+                                </h3>
+                                <div class="text-right flex-shrink-0">
+                                    <p class="text-primary text-xl font-bold leading-none">320</p>
+                                    <p class="text-textSecondary text-xs">баллов</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 mb-2">
+                                <span
+                                    class="category-badge px-2 py-0.5 bg-blue-50 text-blue-600 rounded-md text-xs font-medium">
+                                    <span>🛍️</span><span>Магазин</span>
+                                </span>
+                                <span class="text-textSecondary text-xs">•</span>
+                                <span class="text-textSecondary text-xs">пр. Мира, 42</span>
+                            </div>
+                            <p class="text-textSecondary text-xs mb-2">Последний визит: Неделю назад</p>
+                            <div class="space-y-1">
+                                <div class="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                                    <div class="bg-primary h-full rounded-full" style="width: 64%"></div>
+                                </div>
+                                <p class="text-textSecondary text-xs">180 баллов до награды</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Дента Клиник -->
+                <div class="business-card bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+                    <div class="flex gap-3">
+                        <div class="relative">
+                            <div
+                                class="w-14 h-14 bg-gradient-to-br from-teal-400 to-teal-600 rounded-full flex items-center justify-center text-white text-xl font-bold">
+                                Д
+                            </div>
+                            <div class="absolute -top-1 -right-1 px-1.5 py-0.5 bg-red-500 rounded-full">
+                                <span class="text-white text-[9px] font-bold">NEW</span>
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-start justify-between gap-2 mb-1">
+                                <h3 class="text-textPrimary font-semibold text-base leading-tight">
+                                    Дента Клиник
+                                </h3>
+                                <div class="text-right flex-shrink-0">
+                                    <p class="text-primary text-xl font-bold leading-none">150</p>
+                                    <p class="text-textSecondary text-xs">баллов</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 mb-2">
+                                <span
+                                    class="category-badge px-2 py-0.5 bg-teal-50 text-teal-600 rounded-md text-xs font-medium">
+                                    <span>🦷</span><span>Стоматология</span>
+                                </span>
+                                <span class="text-textSecondary text-xs">•</span>
+                                <span class="text-textSecondary text-xs">1.2 км</span>
+                            </div>
+                            <p class="text-textSecondary text-xs mb-2">Последний визит: Сегодня в 10:00</p>
+                            <div class="space-y-1">
+                                <div class="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                                    <div class="bg-primary h-full rounded-full" style="width: 30%"></div>
+                                </div>
+                                <p class="text-textSecondary text-xs">350 баллов до награды</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Шаурма House -->
+                <div class="business-card bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+                    <div class="flex gap-3">
+                        <div class="relative">
+                            <div
+                                class="w-14 h-14 bg-gradient-to-br from-red-400 to-red-600 rounded-full flex items-center justify-center text-white text-xl font-bold">
+                                Ш
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-start justify-between gap-2 mb-1">
+                                <h3 class="text-textPrimary font-semibold text-base leading-tight">
+                                    Шаурма House
+                                </h3>
+                                <div class="text-right flex-shrink-0">
+                                    <p class="text-primary text-xl font-bold leading-none">105</p>
+                                    <p class="text-textSecondary text-xs">баллов</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 mb-2">
+                                <span
+                                    class="category-badge px-2 py-0.5 bg-red-50 text-red-600 rounded-md text-xs font-medium">
+                                    <span>🌯</span><span>Шаурма</span>
+                                </span>
+                                <span class="text-textSecondary text-xs">•</span>
+                                <span class="text-textSecondary text-xs">ул. Гагарина, 8</span>
+                            </div>
+                            <p class="text-textSecondary text-xs mb-2">Последний визит: 2 недели назад</p>
+                            <div class="space-y-1">
+                                <div class="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                                    <div class="bg-primary h-full rounded-full" style="width: 21%"></div>
+                                </div>
+                                <p class="text-textSecondary text-xs">395 баллов до награды</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Actions -->
+            <section id="quick-actions-section" class="px-4 pb-4">
+                <div class="bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl p-4 border border-orange-100">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                            <i class="fa-solid fa-qrcode text-primary text-lg"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-textPrimary font-semibold text-sm">Быстрое начисление</h3>
+                            <p class="text-textSecondary text-xs">Покажите QR-код кассиру</p>
+                        </div>
+                        <button class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium">
+                            Открыть
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Achievements -->
+            <section id="achievements-section" class="px-4 pb-4">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-textPrimary text-lg font-bold">Достижения</h2>
+                    <button class="text-primary text-sm font-medium">Все</button>
+                </div>
+                <div class="flex gap-3 overflow-x-auto pb-2">
+                    <div class="flex-shrink-0 w-20 text-center">
+                        <div
+                            class="w-20 h-20 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl flex items-center justify-center mb-2 shadow-lg">
+                            <i class="fa-solid fa-trophy text-white text-2xl"></i>
+                        </div>
+                        <p class="text-textPrimary text-xs font-medium">Первый визит</p>
+                    </div>
+                    <div class="flex-shrink-0 w-20 text-center">
+                        <div
+                            class="w-20 h-20 bg-gradient-to-br from-purple-400 to-pink-500 rounded-2xl flex items-center justify-center mb-2 shadow-lg">
+                            <i class="fa-solid fa-fire text-white text-2xl"></i>
+                        </div>
+                        <p class="text-textPrimary text-xs font-medium">5 подряд</p>
+                    </div>
+                    <div class="flex-shrink-0 w-20 text-center">
+                        <div
+                            class="w-20 h-20 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-2xl flex items-center justify-center mb-2 shadow-lg">
+                            <i class="fa-solid fa-star text-white text-2xl"></i>
+                        </div>
+                        <p class="text-textPrimary text-xs font-medium">1000 баллов</p>
+                    </div>
+                    <div class="flex-shrink-0 w-20 text-center">
+                        <div
+                            class="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mb-2 border-2 border-dashed border-gray-300">
+                            <i class="fa-solid fa-lock text-gray-400 text-2xl"></i>
+                        </div>
+                        <p class="text-textSecondary text-xs">Заблокировано</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recommendations -->
+            <section id="recommendations-section" class="px-4 pb-4">
+                <h2 class="text-textPrimary text-lg font-bold mb-3">Рекомендуем посетить</h2>
+                <div class="space-y-3">
+                    <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 flex items-center gap-3">
+                        <div
+                            class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center text-white text-lg font-bold flex-shrink-0">
+                            Ф
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-textPrimary font-semibold text-sm mb-0.5">Фитнес Клуб "Энергия"</h3>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span
+                                    class="category-badge px-2 py-0.5 bg-green-50 text-green-600 rounded-md text-xs font-medium">
+                                    <span>🏋️</span><span>Фитнес</span>
+                                </span>
+                                <span class="text-textSecondary text-xs">800м</span>
+                            </div>
+                            <p class="text-textSecondary text-xs">Бонус за регистрацию: 100 баллов</p>
+                        </div>
+                        <button
+                            class="px-3 py-1.5 bg-primary/10 text-primary rounded-lg text-xs font-medium flex-shrink-0">
+                            Узнать
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recent Activity -->
+            <section id="recent-activity-section" class="px-4 pb-4">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-textPrimary text-lg font-bold">Последняя активность</h2>
+                    <button class="text-primary text-sm font-medium">История</button>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 divide-y divide-gray-100">
+                    <div class="p-4 flex items-center gap-3">
+                        <div class="w-10 h-10 bg-green-50 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-plus text-green-600 text-sm"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-textPrimary font-medium text-sm">Начислено баллов</p>
+                            <p class="text-textSecondary text-xs">Кофейня Уют • Вчера 15:30</p>
+                        </div>
+                        <p class="text-green-600 font-bold text-base flex-shrink-0">+25</p>
+                    </div>
+                    <div class="p-4 flex items-center gap-3">
+                        <div class="w-10 h-10 bg-orange-50 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-gift text-orange-600 text-sm"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-textPrimary font-medium text-sm">Награда получена</p>
+                            <p class="text-textSecondary text-xs">Салон Красоты Люкс • 2 дня назад</p>
+                        </div>
+                        <p class="text-orange-600 font-bold text-base flex-shrink-0">-500</p>
+                    </div>
+                    <div class="p-4 flex items-center gap-3">
+                        <div class="w-10 h-10 bg-green-50 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-plus text-green-600 text-sm"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-textPrimary font-medium text-sm">Начислено баллов</p>
+                            <p class="text-textSecondary text-xs">Дента Клиник • Сегодня 10:00</p>
+                        </div>
+                        <p class="text-green-600 font-bold text-base flex-shrink-0">+150</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tips -->
+            <section id="tips-section" class="px-4 pb-6">
+                <div class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-4 border border-blue-100">
+                    <div class="flex gap-3">
+                        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-lightbulb text-blue-600 text-lg"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-textPrimary font-semibold text-sm mb-1">Совет дня</h3>
+                            <p class="text-textSecondary text-xs leading-relaxed">Не забудьте использовать накопленные
+                                баллы! В Салоне Красоты Люкс доступна награда.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav id="bottom-nav"
+            class="fixed bottom-0 left-0 right-0 max-w-[375px] mx-auto bg-white border-t border-gray-200 z-50">
+            <div class="flex items-center justify-around h-[76px] px-2">
+                <button class="flex flex-col items-center justify-center gap-1 flex-1 py-2 text-primary">
+                    <i class="fa-solid fa-house text-xl"></i>
+                    <span class="text-xs font-medium">Главная</span>
+                </button>
+                <button class="flex flex-col items-center justify-center gap-1 flex-1 py-2 text-textSecondary">
+                    <i class="fa-solid fa-gift text-xl"></i>
+                    <span class="text-xs font-medium">Награды</span>
+                </button>
+                <button class="flex flex-col items-center justify-center gap-1 flex-1 py-2 text-textSecondary">
+                    <i class="fa-solid fa-clock-rotate-left text-xl"></i>
+                    <span class="text-xs font-medium">История</span>
+                </button>
+                <button class="flex flex-col items-center justify-center gap-1 flex-1 py-2 text-textSecondary">
+                    <i class="fa-solid fa-user text-xl"></i>
+                    <span class="text-xs font-medium">Профиль</span>
+                </button>
+            </div>
+        </nav>
     </div>
 
-    <!-- Slide 2 -->
-    <div id="slide-2" class="slide">
-      <div class="flex flex-col items-center flex-1 justify-center px-6 py-8">
-        <div class="relative mb-8">
-          <div
-            class="w-48 h-48 bg-gradient-to-br from-coffee-light to-coffee-medium rounded-3xl flex items-center justify-center shadow-2xl transform rotate-6">
-            <i class="fa-solid fa-mobile-screen-button text-8xl text-white transform -rotate-6"></i>
-          </div>
-          <div
-            class="absolute -bottom-4 -right-4 w-20 h-20 bg-caramel rounded-2xl flex items-center justify-center shadow-xl animate-pulse">
-            <i class="fa-solid fa-wifi text-3xl text-white"></i>
-          </div>
-        </div>
-
-        <h2 class="text-3xl font-bold text-coffee-dark text-center mb-6">Как это работает</h2>
-
-        <div class="w-full space-y-4">
-          <div class="bg-white rounded-2xl p-5 shadow-lg flex items-start space-x-4">
-            <div
-              class="w-12 h-12 bg-gradient-to-br from-coffee-medium to-coffee-dark rounded-xl flex items-center justify-center flex-shrink-0">
-              <span class="text-white text-xl font-bold">1</span>
-            </div>
-            <div class="flex-1">
-              <h3 class="text-coffee-dark font-semibold text-lg mb-1">Совершите покупку</h3>
-              <p class="text-coffee-light text-sm">Закажите любимый напиток или десерт</p>
-            </div>
-            <i class="fa-solid fa-coffee text-2xl text-caramel"></i>
-          </div>
-
-          <div class="bg-white rounded-2xl p-5 shadow-lg flex items-start space-x-4">
-            <div
-              class="w-12 h-12 bg-gradient-to-br from-coffee-medium to-coffee-dark rounded-xl flex items-center justify-center flex-shrink-0">
-              <span class="text-white text-xl font-bold">2</span>
-            </div>
-            <div class="flex-1">
-              <h3 class="text-coffee-dark font-semibold text-lg mb-1">Приложите телефон к метке</h3>
-              <p class="text-coffee-light text-sm">NFC метка находится на кассе</p>
-            </div>
-            <i class="fa-solid fa-hand-pointer text-2xl text-caramel"></i>
-          </div>
-
-          <div class="bg-white rounded-2xl p-5 shadow-lg flex items-start space-x-4">
-            <div
-              class="w-12 h-12 bg-gradient-to-br from-coffee-medium to-coffee-dark rounded-xl flex items-center justify-center flex-shrink-0">
-              <span class="text-white text-xl font-bold">3</span>
-            </div>
-            <div class="flex-1">
-              <h3 class="text-coffee-dark font-semibold text-lg mb-1">Баллы начисляются автоматически</h3>
-              <p class="text-coffee-light text-sm">Мгновенное зачисление на счёт</p>
-            </div>
-            <i class="fa-solid fa-circle-check text-2xl text-green-500"></i>
-          </div>
-        </div>
-      </div>
-
-      <div class="px-6 pb-8 space-y-4">
-        <div class="flex justify-center items-center space-x-2 mb-6">
-          <div class="progress-dot h-2 w-2 bg-coffee-light/30"></div>
-          <div class="progress-dot active h-2 w-6 bg-coffee-medium"></div>
-          <div class="progress-dot h-2 w-2 bg-coffee-light/30"></div>
-          <div class="progress-dot h-2 w-2 bg-coffee-light/30"></div>
-        </div>
-
-        <button onclick="window.nextSlide()"
-          class="w-full bg-gradient-to-r from-coffee-medium to-coffee-dark text-white py-4 rounded-2xl font-semibold text-lg shadow-xl active:scale-95 transition-transform flex items-center justify-center space-x-2">
-          <span>Далее</span>
-          <i class="fa-solid fa-arrow-right swipe-indicator"></i>
-        </button>
-
-        <button onclick="window.skipOnboarding()"
-          class="w-full text-coffee-medium py-3 font-medium text-base">Пропустить</button>
-      </div>
-    </div>
-
-    <!-- Slide 3 -->
-    <div id="slide-3" class="slide">
-      <div class="flex flex-col items-center flex-1 justify-center px-6 py-8">
-        <div class="relative mb-8">
-          <div
-            class="w-40 h-40 bg-gradient-to-br from-caramel to-coffee-medium rounded-3xl flex items-center justify-center shadow-2xl">
-            <i class="fa-solid fa-gift text-7xl text-white"></i>
-          </div>
-          <div
-            class="absolute -top-3 -right-3 w-16 h-16 bg-red-500 rounded-full flex items-center justify-center shadow-xl">
-            <i class="fa-solid fa-percent text-2xl text-white"></i>
-          </div>
-        </div>
-
-        <h2 class="text-3xl font-bold text-coffee-dark text-center mb-3">Обменивайте на награды</h2>
-        <p class="text-coffee-medium text-center mb-8 px-4">Накопленные баллы можно обменять на вкусные бонусы</p>
-
-        <div class="w-full space-y-3">
-          <div class="bg-gradient-to-r from-white to-latte rounded-2xl p-5 shadow-lg border-2 border-caramel/20">
-            <div class="flex items-center justify-between mb-2">
-              <div class="flex items-center space-x-3">
-                <div
-                  class="w-14 h-14 bg-gradient-to-br from-coffee-medium to-coffee-dark rounded-xl flex items-center justify-center">
-                  <i class="fa-solid fa-mug-hot text-2xl text-latte"></i>
-                </div>
-                <div>
-                  <h3 class="text-coffee-dark font-bold text-lg">Латте бесплатно</h3>
-                  <p class="text-coffee-light text-sm">Любой размер</p>
-                </div>
-              </div>
-              <div class="text-right">
-                <p class="text-coffee-dark font-bold text-xl">100</p>
-                <p class="text-coffee-medium text-xs">баллов</p>
-              </div>
-            </div>
-            <div class="w-full bg-coffee-light/20 rounded-full h-2">
-              <div class="bg-gradient-to-r from-caramel to-coffee-medium h-2 rounded-full" style="width: 60%"></div>
-            </div>
-            <p class="text-coffee-medium text-xs mt-2 text-center">Ещё 40 баллов</p>
-          </div>
-
-          <div class="bg-gradient-to-r from-white to-cream rounded-2xl p-5 shadow-lg">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-3">
-                <div
-                  class="w-14 h-14 bg-gradient-to-br from-caramel to-coffee-light rounded-xl flex items-center justify-center">
-                  <i class="fa-solid fa-croissant text-2xl text-white"></i>
-                </div>
-                <div>
-                  <h3 class="text-coffee-dark font-bold text-lg">Круассан</h3>
-                  <p class="text-coffee-light text-sm">Свежая выпечка</p>
-                </div>
-              </div>
-              <div class="text-right">
-                <p class="text-coffee-dark font-bold text-xl">50</p>
-                <p class="text-coffee-medium text-xs">баллов</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="bg-gradient-to-r from-white to-cream rounded-2xl p-5 shadow-lg">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-3">
-                <div
-                  class="w-14 h-14 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center">
-                  <i class="fa-solid fa-tags text-2xl text-white"></i>
-                </div>
-                <div>
-                  <h3 class="text-coffee-dark font-bold text-lg">Скидка 10%</h3>
-                  <p class="text-coffee-light text-sm">На всё меню</p>
-                </div>
-              </div>
-              <div class="text-right">
-                <p class="text-coffee-dark font-bold text-xl">200</p>
-                <p class="text-coffee-medium text-xs">баллов</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="bg-gradient-to-r from-white to-cream rounded-2xl p-5 shadow-lg">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-3">
-                <div
-                  class="w-14 h-14 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center">
-                  <i class="fa-solid fa-cookie-bite text-2xl text-white"></i>
-                </div>
-                <div>
-                  <h3 class="text-coffee-dark font-bold text-lg">Печенье</h3>
-                  <p class="text-coffee-light text-sm">2 штуки</p>
-                </div>
-              </div>
-              <div class="text-right">
-                <p class="text-coffee-dark font-bold text-xl">30</p>
-                <p class="text-coffee-medium text-xs">баллов</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="px-6 pb-8 space-y-4">
-        <div class="flex justify-center items-center space-x-2 mb-6">
-          <div class="progress-dot h-2 w-2 bg-coffee-light/30"></div>
-          <div class="progress-dot h-2 w-2 bg-coffee-light/30"></div>
-          <div class="progress-dot active h-2 w-6 bg-coffee-medium"></div>
-          <div class="progress-dot h-2 w-2 bg-coffee-light/30"></div>
-        </div>
-
-        <button onclick="window.nextSlide()"
-          class="w-full bg-gradient-to-r from-coffee-medium to-coffee-dark text-white py-4 rounded-2xl font-semibold text-lg shadow-xl active:scale-95 transition-transform flex items-center justify-center space-x-2">
-          <span>Далее</span>
-          <i class="fa-solid fa-arrow-right swipe-indicator"></i>
-        </button>
-
-        <button onclick="window.skipOnboarding()"
-          class="w-full text-coffee-medium py-3 font-medium text-base">Пропустить</button>
-      </div>
-    </div>
-
-    <!-- Slide 4 -->
-    <div id="slide-4" class="slide">
-      <div class="flex flex-col items-center flex-1 justify-center px-6 py-8">
-        <div class="relative mb-8">
-          <div
-            class="w-48 h-48 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-2xl animate-pulse">
-            <i class="fa-solid fa-rocket text-8xl text-white"></i>
-          </div>
-          <div
-            class="absolute -top-2 -right-2 w-20 h-20 bg-caramel rounded-full flex items-center justify-center shadow-xl">
-            <span class="text-white text-2xl font-bold">+50</span>
-          </div>
-        </div>
-
-        <h2 class="text-3xl font-bold text-coffee-dark text-center mb-3">Начните зарабатывать баллы уже сегодня!</h2>
-        <p class="text-coffee-medium text-center text-lg px-4 mb-8">Получите 50 приветственных баллов прямо сейчас</p>
-
-        <div class="w-full space-y-4 mb-6">
-          <div class="bg-white rounded-2xl p-6 shadow-lg">
-            <div class="flex items-center space-x-4 mb-4">
-              <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                <i class="fa-solid fa-check text-2xl text-green-600"></i>
-              </div>
-              <div class="flex-1">
-                <h3 class="text-coffee-dark font-semibold">Быстрое накопление</h3>
-                <p class="text-coffee-light text-sm">10 баллов за каждые 100₽</p>
-              </div>
-            </div>
-            <div class="flex items-center space-x-4 mb-4">
-              <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                <i class="fa-solid fa-gift text-2xl text-blue-600"></i>
-              </div>
-              <div class="flex-1">
-                <h3 class="text-coffee-dark font-semibold">Эксклюзивные награды</h3>
-                <p class="text-coffee-light text-sm">Только для участников</p>
-              </div>
-            </div>
-            <div class="flex items-center space-x-4">
-              <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-                <i class="fa-solid fa-bell text-2xl text-purple-600"></i>
-              </div>
-              <div class="flex-1">
-                <h3 class="text-coffee-dark font-semibold">Персональные предложения</h3>
-                <p class="text-coffee-light text-sm">Специальные акции для вас</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="bg-gradient-to-r from-caramel to-coffee-medium rounded-2xl p-6 shadow-xl">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-white/80 text-sm mb-1">Ваш бонус</p>
-                <p class="text-white text-3xl font-bold">+50 баллов</p>
-              </div>
-              <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
-                <i class="fa-solid fa-star text-3xl text-white"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="px-6 pb-8 space-y-4">
-        <div class="flex justify-center items-center space-x-2 mb-6">
-          <div class="progress-dot h-2 w-2 bg-coffee-light/30"></div>
-          <div class="progress-dot h-2 w-2 bg-coffee-light/30"></div>
-          <div class="progress-dot h-2 w-2 bg-coffee-light/30"></div>
-          <div class="progress-dot active h-2 w-6 bg-coffee-medium"></div>
-        </div>
-
-        <button onclick="window.startApp()"
-          class="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-5 rounded-2xl font-bold text-xl shadow-xl active:scale-95 transition-transform flex items-center justify-center space-x-3">
-          <i class="fa-solid fa-rocket text-2xl"></i>
-          <span>Начать</span>
-        </button>
-
-        <div class="bg-coffee-dark/5 rounded-xl p-4 text-center">
-          <p class="text-coffee-medium text-xs">Нажимая "Начать", вы соглашаетесь с условиями программы лояльности</p>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <script type="module" src="/src/main.ts"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script type="module" src="/src/home.ts"></script>
 </body>
 
 </html>
