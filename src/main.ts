@@ -235,6 +235,7 @@ const renderActivity = (activities: Activity[]) => {
 const renderAchievements = (achievements: Achievement[]) => {
   const achievementsContainer = document.querySelector('#achievements-section > div.flex');
   if (achievementsContainer && achievements.length > 0) {
+    // ОЧИЩАЕМ контейнер перед добавлением новых данных
     achievementsContainer.innerHTML = '';
 
     achievements.forEach(achievement => {
