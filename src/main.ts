@@ -233,9 +233,10 @@ const renderActivity = (activities: Activity[]) => {
 
 // Рендер достижений
 const renderAchievements = (achievements: Achievement[]) => {
-  const achievementsContainer = document.querySelector('#achievements-section > div.flex');
+  const achievementsContainer = document.getElementById('achievements-container');
+
   if (achievementsContainer && achievements.length > 0) {
-    // ОЧИЩАЕМ контейнер перед добавлением новых данных
+    console.log('🎯 Нашли контейнер достижений, очищаем...');
     achievementsContainer.innerHTML = '';
 
     achievements.forEach(achievement => {
