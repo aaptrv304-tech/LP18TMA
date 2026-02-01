@@ -308,9 +308,9 @@ const showError = (message: string) => {
 };
 
 const showLoader = (show: boolean) => {
-  // TODO: Добавить визуальный лоадер позже
-  if (show) {
-    console.log('⏳ Загрузка...');
+  const loader = document.getElementById('loader-overlay');
+  if (loader) {
+    loader.style.display = show ? 'flex' : 'none';
   }
 };
 
