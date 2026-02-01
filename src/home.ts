@@ -20,9 +20,6 @@ const initHomePage = () => {
 
         console.log('✅ Telegram WebApp подключен');
         console.log('User:', tg.initDataUnsafe?.user);
-
-        // Можно показать уведомление
-        // tg.showAlert('Добро пожаловать обратно!');
     } else {
         console.warn('⚠️ Режим разработки (не в Telegram)');
     }
@@ -32,7 +29,6 @@ const initHomePage = () => {
     businessCards.forEach((card, index) => {
         card.addEventListener('click', () => {
             console.log(`🏢 Клик по карточке #${index + 1}`);
-            // TODO: Переход на страницу деталей заведения
             alert(`Вы выбрали заведение #${index + 1}`);
         });
     });
@@ -80,13 +76,12 @@ const initHomePage = () => {
         qrButton.addEventListener('click', () => {
             console.log('📱 Открытие QR-кода');
             alert('QR-код для начисления баллов!');
-            // TODO: Открыть модалку с QR-кодом
         });
     }
 
     // Обработчик кнопок фильтров
     const filterButtons = document.querySelectorAll('#filter-section button');
-    filterButtons.forEach((button, index) => {
+    filterButtons.forEach((button) => {
         button.addEventListener('click', () => {
             filterButtons.forEach(btn => {
                 btn.classList.remove('bg-primary', 'text-white');
