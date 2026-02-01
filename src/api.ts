@@ -61,22 +61,34 @@ export interface Recommendation {
 // Функции для получения данных
 export const fetchBusinesses = async (): Promise<BusinessResponse> => {
     const url = getAPIUrl('/api/businesses');
-    console.log('📡 Запрос к:', url);
+    console.log('📡 [fetchBusinesses] Запрос к:', url);
 
-    const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        mode: 'cors',
-    });
+    try {
+        const response = await fetch(url);
+        console.log('📡 [fetchBusinesses] Статус:', response.status);
+        console.log('📡 [fetchBusinesses] Заголовки:', Object.fromEntries(response.headers.entries()));
 
-    if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`HTTP ${response.status}: ${errorText}`);
+        const text = await response.text();
+        console.log('📡 [fetchBusinesses] Тело ответа (первые 500 символов):', text.substring(0, 500));
+
+        if (!response.ok) {
+            console.error('❌ [fetchBusinesses] Ошибка ответа:', text);
+            throw new Error(`HTTP ${response.status}: ${text.substring(0, 200)}`);
+        }
+
+        try {
+            const data = JSON.parse(text);
+            console.log('✅ [fetchBusinesses] JSON успешно распарсен:', data);
+            return data;
+        } catch (parseError) {
+            console.error('❌ [fetchBusinesses] Ошибка парсинга JSON:', parseError);
+            console.error('❌ [fetchBusinesses] Невалидный текст:', text);
+            throw new Error(`Невалидный JSON: ${text.substring(0, 200)}`);
+        }
+    } catch (error: any) {
+        console.error('❌ [fetchBusinesses] Общая ошибка:', error);
+        throw error;
     }
-
-    return response.json();
 };
 
 export const fetchActivity = async (): Promise<{ activities: Activity[] }> => {
@@ -153,3 +165,4 @@ export const checkBackendHealth = async (): Promise<boolean> => {
         return false;
     }
 };
+
