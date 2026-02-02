@@ -219,6 +219,9 @@ const initHomePage = async () => {
     tg.setHeaderColor('#E65A2B');
     tg.setBackgroundColor('#FAFAFA');
 
+    // 🔥 ОТКЛЮЧАЕМ ВЕРТИКАЛЬНЫЕ СВАЙПЫ 🔥
+    tg.disableVerticalSwipes();
+
     console.log('✅ Telegram WebApp подключен');
     console.log('📱 Platform:', tg.platform);
     console.log('👤 User:', tg.initDataUnsafe?.user);
