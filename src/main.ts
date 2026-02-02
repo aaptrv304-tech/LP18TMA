@@ -31,6 +31,34 @@ const initHomePage = async () => {
     tg.setHeaderColor('#E65A2B');
     tg.setBackgroundColor('#FAFAFA');
 
+    // Показываем параметр в интерфейсе (альтернатива)
+    const startParam = tg.initDataUnsafe?.start_param;
+
+    if (startParam) {
+      // Создаём элемент для отображения параметра
+      const paramBadge = document.createElement('div');
+      paramBadge.style.cssText = `
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: #4CAF50;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    z-index: 9999;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  `;
+      paramBadge.textContent = `🏪 ${startParam}`;
+      document.body.appendChild(paramBadge);
+
+      // Удаляем через 3 секунды
+      setTimeout(() => paramBadge.remove(), 3000);
+    }
+
+
+
     console.log('✅ Telegram WebApp подключен');
     console.log('User:', tg.initDataUnsafe?.user);
   } else {
