@@ -207,15 +207,29 @@ const renderBusinesses = (data: BusinessResponse) => {
 
 // Рендер активности
 const renderActivity = (activities: Activity[]) => {
-  const activitySection = document.querySelector('#recent-activity-section .divide-y');
-  if (activitySection && activities.length > 0) {
-    activitySection.innerHTML = '';
+  const activityContainer = document.getElementById('activity-container');
+  if (activityContainer && activities.length > 0) {
+    activityContainer.innerHTML = '';
 
     activities.forEach(activity => {
+      // Определяем правильные цвета на основе типа активности
+      let bgColor = 'green-50';
+      let textColor = 'green-600';
+      let icon = activity.icon || 'fa-plus';
+
+      if (activity.type === 'redeemed' || activity.points < 0) {
+        bgColor = 'orange-50';
+        textColor = 'orange-600';
+        icon = 'fa-gift';
+      }
+
+      // Форматируем знак для отрицательных чисел
+      const pointsDisplay = activity.points >= 0 ? `+${activity.points}` : `${activity.points}`;
+
       const activityHTML = `
         <div class="p-4 flex items-center gap-3">
-          <div class="w-10 h-10 bg-${activity.color}-50 rounded-full flex items-center justify-center flex-shrink-0">
-            <i class="fa-solid ${activity.icon} text-${activity.color}-600 text-sm"></i>
+          <div class="w-10 h-10 bg-${bgColor} rounded-full flex items-center justify-center flex-shrink-0">
+            <i class="fa-solid ${icon} text-${textColor} text-sm"></i>
           </div>
           <div class="flex-1 min-w-0">
             <p class="text-textPrimary font-medium text-sm">
@@ -223,10 +237,10 @@ const renderActivity = (activities: Activity[]) => {
             </p>
             <p class="text-textSecondary text-xs">${activity.business_name} • ${activity.date}</p>
           </div>
-          <p class="text-${activity.color}-600 font-bold text-base flex-shrink-0">${activity.points > 0 ? '+' : ''}${activity.points}</p>
+          <p class="text-${textColor} font-bold text-base flex-shrink-0">${pointsDisplay}</p>
         </div>
       `;
-      activitySection.innerHTML += activityHTML;
+      activityContainer.innerHTML += activityHTML;
     });
   }
 };
