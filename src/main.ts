@@ -20,7 +20,6 @@ import {
   type Recommendation
 } from './api';
 
-// Показ красивого уведомления о получении бонусов
 const showBonusNotification = (shopName: string, points: number) => {
   try {
     // Создаём оверлей
@@ -32,7 +31,7 @@ const showBonusNotification = (shopName: string, points: number) => {
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(0, 0, 0, 0.5); /* Было 0.85, стало 0.5 - более светлый */
       backdrop-filter: blur(10px);
       z-index: 999999;
       display: flex;
@@ -45,13 +44,13 @@ const showBonusNotification = (shopName: string, points: number) => {
     // Создаём карточку
     const card = document.createElement('div');
     card.style.cssText = `
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #FF6B35 0%, #FF9E6D 100%); /* Оранжевый градиент */
       border-radius: 24px;
       padding: 40px 32px;
       text-align: center;
       max-width: 320px;
       width: 90%;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 20px 60px rgba(255, 107, 53, 0.4); /* Тень в оранжевых тонах */
       transform: scale(0.8);
       opacity: 0;
     `;
@@ -67,7 +66,7 @@ const showBonusNotification = (shopName: string, points: number) => {
       justify-content: center;
       align-items: center;
       margin: 0 auto 24px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3); /* Оранжевая тень */
     `;
     icon.innerHTML = '<i class="fa-solid fa-coins text-primary text-4xl"></i>';
 
@@ -78,23 +77,25 @@ const showBonusNotification = (shopName: string, points: number) => {
       font-size: 24px;
       font-weight: 700;
       margin: 0 0 8px 0;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     `;
     title.textContent = '🎉 Бонус получен!';
 
     // Название заведения
     const shop = document.createElement('p');
     shop.style.cssText = `
-      color: rgba(255, 255, 255, 0.9);
+      color: rgba(255, 255, 255, 0.95);
       font-size: 16px;
       margin: 0 0 24px 0;
       font-weight: 500;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
     `;
     shop.textContent = shopName;
 
     // Баллы
     const pointsContainer = document.createElement('div');
     pointsContainer.style.cssText = `
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.25); /* Было 0.2, стало 0.25 - чуть светлее */
       border-radius: 16px;
       padding: 16px;
       margin: 24px 0;
@@ -106,12 +107,13 @@ const showBonusNotification = (shopName: string, points: number) => {
       font-size: 48px;
       font-weight: 800;
       display: block;
+      text-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
     `;
     pointsText.textContent = `+${points}`;
 
     const pointsLabel = document.createElement('span');
     pointsLabel.style.cssText = `
-      color: rgba(255, 255, 255, 0.8);
+      color: rgba(255, 255, 255, 0.9);
       font-size: 14px;
       display: block;
       margin-top: 4px;
@@ -126,7 +128,7 @@ const showBonusNotification = (shopName: string, points: number) => {
     const button = document.createElement('button');
     button.style.cssText = `
       background: white;
-      color: #667eea;
+      color: #FF6B35; /* Оранжевый текст */
       border: none;
       border-radius: 12px;
       padding: 14px 40px;
@@ -134,9 +136,22 @@ const showBonusNotification = (shopName: string, points: number) => {
       font-weight: 600;
       cursor: pointer;
       margin-top: 16px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3); /* Оранжевая тень */
+      transition: all 0.2s ease;
     `;
     button.textContent = 'Отлично!';
+
+    // Эффекты при наведении/нажатии
+    button.addEventListener('touchstart', () => {
+      button.style.transform = 'scale(0.95)';
+      button.style.boxShadow = '0 2px 10px rgba(255, 107, 53, 0.4)';
+    });
+
+    button.addEventListener('touchend', () => {
+      button.style.transform = 'scale(1)';
+      button.style.boxShadow = '0 4px 15px rgba(255, 107, 53, 0.3)';
+    });
+
     button.addEventListener('click', () => {
       overlay.style.opacity = '0';
       setTimeout(() => {
