@@ -1,5 +1,13 @@
 import { getAPIUrl } from './config';
 
+// Получаем данные из Telegram WebApp
+const getTelegramInitData = (): string | null => {
+    if (window.Telegram?.WebApp) {
+        return window.Telegram.WebApp.initData;
+    }
+    return null;
+};
+
 // Типы данных
 export interface Business {
     id: number;
@@ -58,15 +66,30 @@ export interface Recommendation {
     bonus_points: number;
 }
 
+// Базовый фетчер с авторизацией
+const apiFetch = async (url: string, options: RequestInit = {}): Promise<Response> => {
+    const initData = getTelegramInitData();
+
+    const headers = {
+        'Content-Type': 'application/json',
+        ...(initData && { 'X-Telegram-Init-Data': initData }),
+        ...options.headers,
+    };
+
+    return fetch(url, {
+        ...options,
+        headers,
+    });
+};
+
 // Функции для получения данных
 export const fetchBusinesses = async (): Promise<BusinessResponse> => {
     const url = getAPIUrl('/api/businesses');
     console.log('📡 [fetchBusinesses] Запрос к:', url);
 
     try {
-        const response = await fetch(url);
+        const response = await apiFetch(url);
         console.log('📡 [fetchBusinesses] Статус:', response.status);
-        console.log('📡 [fetchBusinesses] Заголовки:', Object.fromEntries(response.headers.entries()));
 
         const text = await response.text();
         console.log('📡 [fetchBusinesses] Тело ответа (первые 500 символов):', text.substring(0, 500));
@@ -95,17 +118,10 @@ export const fetchActivity = async (): Promise<{ activities: Activity[] }> => {
     const url = getAPIUrl('/api/activity');
     console.log('📡 Запрос к:', url);
 
-    const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        mode: 'cors',
-    });
+    const response = await apiFetch(url);
 
     if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`HTTP ${response.status}: ${errorText}`);
+        throw new Error(`HTTP ${response.status}`);
     }
 
     return response.json();
@@ -115,17 +131,10 @@ export const fetchAchievements = async (): Promise<{ achievements: Achievement[]
     const url = getAPIUrl('/api/achievements');
     console.log('📡 Запрос к:', url);
 
-    const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        mode: 'cors',
-    });
+    const response = await apiFetch(url);
 
     if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`HTTP ${response.status}: ${errorText}`);
+        throw new Error(`HTTP ${response.status}`);
     }
 
     return response.json();
@@ -135,17 +144,10 @@ export const fetchRecommendations = async (): Promise<{ recommendations: Recomme
     const url = getAPIUrl('/api/recommendations');
     console.log('📡 Запрос к:', url);
 
-    const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        mode: 'cors',
-    });
+    const response = await apiFetch(url);
 
     if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`HTTP ${response.status}: ${errorText}`);
+        throw new Error(`HTTP ${response.status}`);
     }
 
     return response.json();
@@ -155,10 +157,7 @@ export const fetchRecommendations = async (): Promise<{ recommendations: Recomme
 export const checkBackendHealth = async (): Promise<boolean> => {
     try {
         const url = getAPIUrl('/health');
-        const response = await fetch(url, {
-            method: 'GET',
-            mode: 'cors',
-        });
+        const response = await apiFetch(url);
         return response.ok;
     } catch (error) {
         console.error('Backend health check failed:', error);
