@@ -1,7 +1,7 @@
 // Конфигурация API
 export const API_CONFIG = {
     // Твой ngrok URL
-    baseURL: 'https://cleveland-cant-jpeg-initiative.trycloudflare.com',
+    baseURL: 'https://explicitly-shipment-instead-comparing.trycloudflare.com',
     endpoints: {
         businesses: '/api/businesses',
         activity: '/api/activity',
