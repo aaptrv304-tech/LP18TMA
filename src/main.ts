@@ -14,6 +14,7 @@ import {
   fetchAchievements,
   fetchRecommendations,
   type BusinessResponse,
+  type Business, // ← ДОБАВЬ ЭТУ СТРОКУ
   type Activity,
   type Achievement,
   type Recommendation
@@ -138,10 +139,25 @@ const renderBusinesses = (data: BusinessResponse) => {
   // Очищаем список заведений
   const businessListSection = document.getElementById('business-list-section');
   if (businessListSection) {
+    // Проверяем, есть ли заведения
+    if (data.businesses.length === 0) {
+      // Показываем сообщение "Здесь пока пусто"
+      businessListSection.innerHTML = `
+        <div class="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 text-center">
+          <div class="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fa-solid fa-house text-white text-2xl"></i>
+          </div>
+          <p class="text-textSecondary text-base font-medium">Здесь пока пусто</p>
+          <p class="text-textSecondary text-sm mt-2">Посетите первое заведение, чтобы начать накапливать баллы</p>
+        </div>
+      `;
+      return;
+    }
+
     businessListSection.innerHTML = '';
 
     // Рендерим каждое заведение
-    data.businesses.forEach(business => {
+    data.businesses.forEach((business: Business) => {
       const businessHTML = `
         <div class="business-card bg-white rounded-2xl p-4 shadow-sm border border-gray-100 ${business.has_reward ? 'ring-2 ring-green-100' : ''}">
           <div class="flex gap-3">
