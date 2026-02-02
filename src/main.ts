@@ -31,7 +31,7 @@ const showBonusNotification = (shopName: string, points: number) => {
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0, 0, 0, 0.5); /* Было 0.85, стало 0.5 - более светлый */
+      background: rgba(0, 0, 0, 0.5);
       backdrop-filter: blur(10px);
       z-index: 999999;
       display: flex;
@@ -44,13 +44,13 @@ const showBonusNotification = (shopName: string, points: number) => {
     // Создаём карточку
     const card = document.createElement('div');
     card.style.cssText = `
-      background: linear-gradient(135deg, #FF6B35 0%, #FF9E6D 100%); /* Оранжевый градиент */
+      background: linear-gradient(135deg, #FF6B35 0%, #FF9E6D 100%);
       border-radius: 24px;
       padding: 40px 32px;
       text-align: center;
       max-width: 320px;
       width: 90%;
-      box-shadow: 0 20px 60px rgba(255, 107, 53, 0.4); /* Тень в оранжевых тонах */
+      box-shadow: 0 20px 60px rgba(255, 107, 53, 0.4);
       transform: scale(0.8);
       opacity: 0;
     `;
@@ -66,7 +66,7 @@ const showBonusNotification = (shopName: string, points: number) => {
       justify-content: center;
       align-items: center;
       margin: 0 auto 24px;
-      box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3); /* Оранжевая тень */
+      box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
     `;
     icon.innerHTML = '<i class="fa-solid fa-coins text-primary text-4xl"></i>';
 
@@ -95,7 +95,7 @@ const showBonusNotification = (shopName: string, points: number) => {
     // Баллы
     const pointsContainer = document.createElement('div');
     pointsContainer.style.cssText = `
-      background: rgba(255, 255, 255, 0.25); /* Было 0.2, стало 0.25 - чуть светлее */
+      background: rgba(255, 255, 255, 0.25);
       border-radius: 16px;
       padding: 16px;
       margin: 24px 0;
@@ -128,7 +128,7 @@ const showBonusNotification = (shopName: string, points: number) => {
     const button = document.createElement('button');
     button.style.cssText = `
       background: white;
-      color: #FF6B35; /* Оранжевый текст */
+      color: #FF6B35;
       border: none;
       border-radius: 12px;
       padding: 14px 40px;
@@ -136,7 +136,7 @@ const showBonusNotification = (shopName: string, points: number) => {
       font-weight: 600;
       cursor: pointer;
       margin-top: 16px;
-      box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3); /* Оранжевая тень */
+      box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
       transition: all 0.2s ease;
     `;
     button.textContent = 'Отлично!';
@@ -254,7 +254,7 @@ const initHomePage = async () => {
     await loadAllData();
   } catch (error) {
     console.error('❌ Ошибка загрузки данных:', error);
-    showLoader(false); // На всякий случай скрываем лоадер
+    showLoader(false);
   }
 
   // Настраиваем обработчики
@@ -289,7 +289,6 @@ const loadAllData = async () => {
   } catch (error: any) {
     console.error('❌ Ошибка загрузки данных:', error);
 
-    // Детальное логирование ошибки
     let errorMessage = 'Не удалось загрузить данные';
     if (error.message) {
       errorMessage += `: ${error.message}`;
@@ -300,9 +299,8 @@ const loadAllData = async () => {
 
     showError(errorMessage);
 
-    // Для отладки — покажем полную ошибку в консоли
     if (window.Telegram?.WebApp) {
-      window.Telegram.WebApp.showAlert(`Ошибка: ${errorMessage}\nПроверь консоль для деталей`);
+      window.Telegram.WebApp.showAlert(`Ошибка: ${errorMessage}`);
     }
   } finally {
     showLoader(false);
@@ -350,13 +348,24 @@ const renderStatsCard = (stats: any) => {
 
 // Рендер списка заведений
 const renderBusinesses = (data: BusinessResponse) => {
+  // 🔥 ПРОВЕРКА НА NULL ИЛИ ОТСУТСТВИЕ ДАННЫХ 🔥
+  if (!data || !data.businesses) {
+    console.log('ℹ️ renderBusinesses: businesses is null or undefined, showing empty state');
+    data = {
+      businesses: [],
+      stats: data?.stats || { total_points: 0, total_businesses: 0, total_visits: 0, total_rewards: 0 }
+    };
+  }
+
   // Обновляем статистику
-  renderStatsCard(data.stats);
+  if (data.stats) {
+    renderStatsCard(data.stats);
+  }
 
   // Очищаем список заведений
   const businessListSection = document.getElementById('business-list-section');
   if (businessListSection) {
-    // Проверяем, есть ли заведения
+    // 🔥 ПРОВЕРЯЕМ, ЧТО МАССИВ ПУСТОЙ 🔥
     if (data.businesses.length === 0) {
       // Показываем сообщение "Здесь пока пусто"
       businessListSection.innerHTML = `
@@ -439,11 +448,11 @@ const renderBusinesses = (data: BusinessResponse) => {
 };
 
 // Рендер активности
-const renderActivity = (activities: Activity[]) => {
+const renderActivity = (activities: Activity[] | null | undefined) => {
   const activityContainer = document.getElementById('activity-container');
   if (activityContainer) {
-    // Проверяем, есть ли активность
-    if (activities.length === 0) {
+    // 🔥 ПРОВЕРКА НА NULL ИЛИ ОТСУТСТВИЕ ДАННЫХ 🔥
+    if (!activities || activities.length === 0) {
       // Показываем сообщение "Здесь пока пусто"
       activityContainer.innerHTML = `
         <div class="p-8 text-center">
@@ -494,10 +503,16 @@ const renderActivity = (activities: Activity[]) => {
 };
 
 // Рендер достижений
-const renderAchievements = (achievements: Achievement[]) => {
+const renderAchievements = (achievements: Achievement[] | null | undefined) => {
   const achievementsContainer = document.getElementById('achievements-container');
 
-  if (achievementsContainer && achievements.length > 0) {
+  if (achievementsContainer) {
+    // 🔥 ПРОВЕРКА НА NULL ИЛИ ОТСУТСТВИЕ ДАННЫХ 🔥
+    if (!achievements || achievements.length === 0) {
+      achievementsContainer.innerHTML = '';
+      return;
+    }
+
     console.log('🎯 Нашли контейнер достижений, очищаем...');
     achievementsContainer.innerHTML = '';
 
@@ -516,9 +531,23 @@ const renderAchievements = (achievements: Achievement[]) => {
 };
 
 // Рендер рекомендаций
-const renderRecommendations = (recommendations: Recommendation[]) => {
+const renderRecommendations = (recommendations: Recommendation[] | null | undefined) => {
   const recommendationsSection = document.getElementById('recommendations-section');
-  if (recommendationsSection && recommendations.length > 0) {
+  if (recommendationsSection) {
+    // 🔥 ПРОВЕРКА НА NULL ИЛИ ОТСУТСТВИЕ ДАННЫХ 🔥
+    if (!recommendations || recommendations.length === 0) {
+      // Скрываем секцию или показываем "Нет рекомендаций"
+      const container = recommendationsSection.querySelector('.space-y-3');
+      if (container) {
+        container.innerHTML = `
+          <div class="p-8 text-center">
+            <p class="text-textSecondary text-sm">Нет рекомендаций</p>
+          </div>
+        `;
+      }
+      return;
+    }
+
     // Очищаем контейнер рекомендаций (кроме заголовка)
     const container = recommendationsSection.querySelector('.space-y-3');
     if (container) {
@@ -631,7 +660,7 @@ const setupEventListeners = () => {
 // Запуск приложения
 initHomePage().catch((error) => {
   console.error('❌ Критическая ошибка инициализации:', error);
-  showLoader(false); // На всякий случай скрываем лоадер
+  showLoader(false);
   if (window.Telegram?.WebApp) {
     window.Telegram.WebApp.showAlert('Ошибка запуска приложения. Попробуйте перезапустить.');
   }
