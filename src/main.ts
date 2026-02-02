@@ -20,9 +20,37 @@ import {
   type Recommendation
 } from './api';
 
-// Инициализация главной страницы
 const initHomePage = async () => {
   console.log('🏠 Главная страница загружена');
+
+  // 🔥 ПРОВЕРКА НА УЖЕ ОТКРЫТОЕ ОКНО 🔥
+  if (window.Telegram?.WebApp) {
+    const tg = window.Telegram.WebApp;
+
+    const windowId = Date.now().toString();
+    const storageKey = 'apelsinchik_active_window';
+
+    const existingWindowId = localStorage.getItem(storageKey);
+
+    if (existingWindowId && existingWindowId !== windowId) {
+      tg.showAlert('ℹ️ Приложение уже открыто!\nЗакройте это окно и продолжите работу в основном.');
+
+      // Закрываем окно через 3 секунды
+      setTimeout(() => {
+        window.close();
+      }, 3000);
+
+      // Не продолжаем инициализацию
+      return;
+    }
+
+    localStorage.setItem(storageKey, windowId);
+
+    // Очищаем при закрытии
+    const cleanup = () => localStorage.removeItem(storageKey);
+    window.addEventListener('beforeunload', cleanup);
+    window.addEventListener('pagehide', cleanup);
+  }
 
   // Проверяем доступность Telegram WebApp
   if (window.Telegram?.WebApp) {
@@ -31,36 +59,29 @@ const initHomePage = async () => {
     tg.setHeaderColor('#E65A2B');
     tg.setBackgroundColor('#FAFAFA');
 
-    // Показываем параметр в интерфейсе (альтернатива)
+    console.log('✅ Telegram WebApp подключен');
+    console.log('📱 Platform:', tg.platform);
+    console.log('👤 User:', tg.initDataUnsafe?.user);
+
+    // 🔥 ПРОВЕРКА ПАРАМЕТРА STARTAPP 🔥
     const startParam = tg.initDataUnsafe?.start_param;
 
     if (startParam) {
-      // Создаём элемент для отображения параметра
-      const paramBadge = document.createElement('div');
-      paramBadge.style.cssText = `
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    background: #4CAF50;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: bold;
-    z-index: 9999;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-  `;
-      paramBadge.textContent = `🏪 ${startParam}`;
-      document.body.appendChild(paramBadge);
+      // Параметр получен - показываем красивое уведомление
+      console.log('✅ Start param:', startParam);
 
-      // Удаляем через 3 секунды
-      setTimeout(() => paramBadge.remove(), 3000);
+      // Показываем уведомление о получении бонусов
+      // Пока используем тестовые данные
+      const shopName = getShopNameFromParam(startParam);
+      const bonusPoints = 100; // Тестовое значение, позже получим с бэкенда
+
+      showBonusNotification(shopName, bonusPoints);
+
+      // TODO: Отправить запрос на бэкенд для записи посещения
+      // await recordVisit(startParam, bonusPoints);
+    } else {
+      console.log('ℹ️ Start param не передан');
     }
-
-
-
-    console.log('✅ Telegram WebApp подключен');
-    console.log('User:', tg.initDataUnsafe?.user);
   } else {
     console.warn('⚠️ Режим разработки (не в Telegram)');
   }
@@ -70,6 +91,19 @@ const initHomePage = async () => {
 
   // Настраиваем обработчики
   setupEventListeners();
+};
+
+// Вспомогательная функция для получения названия заведения из параметра
+const getShopNameFromParam = (param: string): string => {
+  // TODO: Получить название из бэкенда по параметру
+  // Пока используем маппинг или просто возвращаем параметр
+  const shopNames: { [key: string]: string } = {
+    'shop_001': 'Кофейня Уют',
+    'shop_002': 'Салон Красоты Люкс',
+    'shop_003': 'Магазин "Продукты 24"',
+  };
+
+  return shopNames[param] || param;
 };
 
 // Загрузка всех данных
@@ -441,3 +475,210 @@ const setupEventListeners = () => {
 
 // Запуск приложения
 initHomePage().catch(console.error);
+
+// Показ красивого уведомления о получении бонусов
+const showBonusNotification = (shopName: string, points: number) => {
+  // Создаём оверлей с анимацией
+  const overlay = document.createElement('div');
+  overlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    z-index: 999999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease-out;
+  `;
+
+  // Создаём карточку с контентом
+  const card = document.createElement('div');
+  card.style.cssText = `
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 24px;
+    padding: 40px 32px;
+    text-align: center;
+    max-width: 320px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    transform: scale(0.8);
+    opacity: 0;
+    animation: popup 0.6s ease-out forwards;
+    animation-delay: 0.1s;
+  `;
+
+  // Создаём иконку с анимацией
+  const icon = document.createElement('div');
+  icon.style.cssText = `
+    width: 80px;
+    height: 80px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    animation: bounce 0.6s ease-in-out infinite;
+  `;
+  icon.innerHTML = '<i class="fa-solid fa-coins text-primary text-4xl"></i>';
+
+  // Создаём заголовок
+  const title = document.createElement('h2');
+  title.style.cssText = `
+    color: white;
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  `;
+  title.textContent = '🎉 Бонус получен!';
+
+  // Создаём название заведения
+  const shop = document.createElement('p');
+  shop.style.cssText = `
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 16px;
+    margin: 0 0 24px 0;
+    font-weight: 500;
+  `;
+  shop.textContent = shopName;
+
+  // Создаём количество баллов с анимацией
+  const pointsContainer = document.createElement('div');
+  pointsContainer.style.cssText = `
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 16px;
+    margin: 24px 0;
+    animation: pulse 2s ease-in-out infinite;
+  `;
+
+  const pointsText = document.createElement('span');
+  pointsText.style.cssText = `
+    color: white;
+    font-size: 48px;
+    font-weight: 800;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    display: block;
+    animation: counter 1s ease-out forwards;
+  `;
+  pointsText.dataset.value = points.toString();
+  pointsText.textContent = '0';
+
+  const pointsLabel = document.createElement('span');
+  pointsLabel.style.cssText = `
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+    display: block;
+    margin-top: 4px;
+    font-weight: 500;
+  `;
+  pointsLabel.textContent = 'бонусных баллов';
+
+  pointsContainer.appendChild(pointsText);
+  pointsContainer.appendChild(pointsLabel);
+
+  // Создаём кнопку закрытия
+  const button = document.createElement('button');
+  button.style.cssText = `
+    background: white;
+    color: #667eea;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 40px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+  `;
+  button.textContent = 'Отлично!';
+  button.addEventListener('click', () => {
+    overlay.style.animation = 'fadeOut 0.3s ease-out forwards';
+    setTimeout(() => {
+      if (overlay.parentNode) {
+        overlay.parentNode.removeChild(overlay);
+      }
+    }, 300);
+  });
+
+  // Добавляем все элементы в карточку
+  card.appendChild(icon);
+  card.appendChild(title);
+  card.appendChild(shop);
+  card.appendChild(pointsContainer);
+  card.appendChild(button);
+
+  // Добавляем карточку в оверлей
+  overlay.appendChild(card);
+
+  // Добавляем оверлей в документ
+  document.body.appendChild(overlay);
+
+  // Анимация счёта баллов
+  setTimeout(() => {
+    const start = 0;
+    const end = points;
+    const duration = 1000;
+    const startTimestamp = Date.now();
+
+    const step = () => {
+      const progress = Math.min((Date.now() - startTimestamp) / duration, 1);
+      const current = Math.floor(progress * (end - start) + start);
+      pointsText.textContent = current.toLocaleString('ru');
+
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      }
+    };
+
+    window.requestAnimationFrame(step);
+  }, 400);
+
+  // Автоматическое закрытие через 5 секунд
+  setTimeout(() => {
+    button.click();
+  }, 5000);
+};
+
+// Анимации CSS
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+  
+  @keyframes popup {
+    0% { transform: scale(0.8); opacity: 0; }
+    50% { transform: scale(1.05); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+  
+  @keyframes counter {
+    from { transform: scale(0.5); opacity: 0.5; }
+    to { transform: scale(1); opacity: 1; }
+  }
+`;
+document.head.appendChild(style);
