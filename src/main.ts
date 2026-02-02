@@ -224,7 +224,22 @@ const renderBusinesses = (data: BusinessResponse) => {
 // Рендер активности
 const renderActivity = (activities: Activity[]) => {
   const activityContainer = document.getElementById('activity-container');
-  if (activityContainer && activities.length > 0) {
+  if (activityContainer) {
+    // Проверяем, есть ли активность
+    if (activities.length === 0) {
+      // Показываем сообщение "Здесь пока пусто"
+      activityContainer.innerHTML = `
+        <div class="p-8 text-center">
+          <div class="w-12 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-3">
+            <i class="fa-regular fa-clock text-white text-xl"></i>
+          </div>
+          <p class="text-textSecondary text-sm font-medium">Здесь пока пусто</p>
+          <p class="text-textSecondary text-xs mt-1">Совершите первый визит, чтобы увидеть активность</p>
+        </div>
+      `;
+      return;
+    }
+
     activityContainer.innerHTML = '';
 
     activities.forEach(activity => {
