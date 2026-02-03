@@ -26,7 +26,7 @@ import {
 import { showBusinessDetails } from './business-details';
 
 // Глобальные переменные
-let businesses: Business[] = [];
+let businesses: Business[] = []; // ← ДОЛЖНА БЫТЬ ЗДЕСЬ
 
 // Показ красивого уведомления о повторном посещении
 const showVisitWarning = (shopName: string, hoursLeft: number) => {
@@ -434,6 +434,9 @@ const initHomePage = async () => {
           // Загружаем данные
           await loadAllData();
 
+          // 🔥 НАСТРАИВАЕМ ОБРАБОТЧИКИ ПЕРЕД ПОКАЗОМ УВЕДОМЛЕНИЯ 🔥
+          setupEventListeners();
+
           // 🔥 ТЕПЕРЬ ПОКАЗЫВАЕМ УВЕДОМЛЕНИЕ 🔥
           setTimeout(() => {
             showBonusNotification(visitResult.business_name, visitResult.points_earned);
@@ -449,6 +452,9 @@ const initHomePage = async () => {
 
           // Загружаем данные
           await loadAllData();
+
+          // 🔥 НАСТРАИВАЕМ ОБРАБОТЧИКИ ПЕРЕД ПОКАЗОМ УВЕДОМЛЕНИЯ 🔥
+          setupEventListeners();
 
           // Показываем предупреждение
           setTimeout(() => {
@@ -484,7 +490,7 @@ const initHomePage = async () => {
     showLoader(false);
   }
 
-  // Настраиваем обработчики
+  // 🔥 НАСТРАИВАЕМ ОБРАБОТЧИКИ ВО ВСЕХ СЛУЧАЯХ 🔥
   setupEventListeners();
 };
 
@@ -582,11 +588,11 @@ const renderBusinesses = (data: BusinessResponse) => {
       businesses: [],
       stats: data?.stats || { total_points: 0, total_businesses: 0, total_visits: 0, total_rewards: 0 }
     };
-    // 🔥 СОХРАНЯЕМ ДАННЫЕ ДЛЯ МАРШРУТИЗАЦИИ 🔥
-    if (data && data.businesses) {
-      businesses = data.businesses;
-    }
   }
+
+  // 🔥 СОХРАНЯЕМ ДАННЫЕ В ГЛОБАЛЬНУЮ ПЕРЕМЕННУЮ ПРЯМО ЗДЕСЬ 🔥
+  businesses = data.businesses || [];
+  console.log('✅ Businesses saved:', businesses.length, 'items');
 
   // Обновляем статистику
   if (data.stats) {
@@ -596,9 +602,7 @@ const renderBusinesses = (data: BusinessResponse) => {
   // Очищаем список заведений
   const businessListSection = document.getElementById('business-list-section');
   if (businessListSection) {
-    // 🔥 ПРОВЕРЯЕМ, ЧТО МАССИВ ПУСТОЙ 🔥
     if (data.businesses.length === 0) {
-      // Показываем сообщение "Здесь пока пусто"
       businessListSection.innerHTML = `
         <div class="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 text-center">
           <div class="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -612,6 +616,7 @@ const renderBusinesses = (data: BusinessResponse) => {
     }
 
     businessListSection.innerHTML = '';
+
 
     // Рендерим каждое заведение
     data.businesses.forEach((business: Business) => {
@@ -843,20 +848,22 @@ const setupEventListeners = () => {
   document.addEventListener('click', (e) => {
     const card = (e.target as HTMLElement).closest('.business-card');
     if (card) {
-      // Находим индекс карточки
       const cards = document.querySelectorAll('.business-card');
       const index = Array.from(cards).indexOf(card);
 
-      console.log('🏢 Business card clicked! Index:', index);
-      console.log('📊 Businesses array length:', businesses.length);
+      console.log('🏢 Card clicked! Index:', index);
+      console.log('📊 Global businesses array:', businesses);
+      console.log('📊 Array length:', businesses.length);
 
       if (index >= 0 && businesses[index]) {
-        console.log('✅ Showing details for:', businesses[index].name);
+        console.log('✅ Business found:', businesses[index]);
         showBusinessDetails(businesses[index]);
       } else {
         console.error('❌ Business not found at index', index);
+        console.error('❌ Available indices:', businesses.map((_, i) => i));
+
         if (window.Telegram?.WebApp) {
-          window.Telegram.WebApp.showAlert('Ошибка: данные о заведении не загружены');
+          window.Telegram.WebApp.showAlert(`Ошибка: данные о заведении не загружены. Доступно: ${businesses.length} заведений`);
         }
       }
     }
@@ -881,6 +888,7 @@ const setupEventListeners = () => {
   // Обработчик кнопки "Быстрое начисление"
   const qrButton = document.querySelector('#quick-actions-section button');
   if (qrButton) {
+
     qrButton.addEventListener('click', () => {
       console.log('📱 Открытие QR-кода');
       alert('QR-код для начисления баллов!');
