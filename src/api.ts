@@ -165,3 +165,5 @@ export const checkBackendHealth = async (): Promise<boolean> => {
     }
 };
 
+export { getAPIUrl, getTelegramInitData };
+

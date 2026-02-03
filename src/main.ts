@@ -13,6 +13,8 @@ import {
   fetchActivity,
   fetchAchievements,
   fetchRecommendations,
+  getAPIUrl,              // ← ДОБАВЛЕНО
+  getTelegramInitData,    // ← ДОБАВЛЕНО
   type BusinessResponse,
   type Business,
   type Activity,
@@ -193,18 +195,6 @@ const showBonusNotification = (shopName: string, points: number) => {
   }
 };
 
-// Вспомогательная функция для получения названия заведения
-const getShopNameFromParam = (param: string): string => {
-  const shopNames: { [key: string]: string } = {
-    'shop_001': 'Кофейня Уют',
-    'shop_002': 'Салон Красоты Люкс',
-    'shop_003': 'Магазин "Продукты 24"',
-    'shop_004': 'Дента Клиник',
-    'shop_005': 'Шаурма House',
-  };
-  return shopNames[param] || `Заведение ${param}`;
-};
-
 // Инициализация главной страницы
 const initHomePage = async () => {
   console.log('🏠 Главная страница загружена');
@@ -232,16 +222,45 @@ const initHomePage = async () => {
     if (startParam) {
       console.log('✅ Start param:', startParam);
 
-      // Показываем уведомление о бонусе (тестовые данные)
-      const shopName = getShopNameFromParam(startParam);
-      const bonusPoints = 100;
+      // 🔥 ОТПРАВЛЯЕМ ЗАПРОС НА НАЧИСЛЕНИЕ БАЛЛОВ 🔥
+      try {
+        const response = await fetch(getAPIUrl('/api/visit'), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Telegram-Init-Data': getTelegramInitData() || ''
+          },
+          body: JSON.stringify({ shop_param: startParam })
+        });
 
-      // Показываем через небольшую задержку, чтобы интерфейс успел загрузиться
-      setTimeout(() => {
-        showBonusNotification(shopName, bonusPoints);
-      }, 800);
+        if (response.ok) {
+          const result = await response.json();
+          console.log('✅ Visit processed:', result);
 
-      // TODO: Позже добавим запрос к бэкенду для записи посещения
+          // Показываем уведомление с реальными данными с бэкенда
+          showBonusNotification(result.visit.business_name, result.visit.points_earned);
+
+          // Обновляем данные после начисления
+          setTimeout(async () => {
+            await loadAllData();
+          }, 1500);
+        } else {
+          const error = await response.json();
+          console.error('❌ Visit failed:', error);
+
+          // Показываем ошибку пользователю
+          if (error.error?.includes('Слишком рано')) {
+            tg.showAlert('⏳ Слишком рано для следующего визита!\nМежду визитами должно пройти не менее 24 часов.');
+          } else {
+            tg.showAlert(`Ошибка: ${error.error || 'Неизвестная ошибка'}`);
+          }
+        }
+      } catch (error) {
+        console.error('❌ Error processing visit:', error);
+        if (window.Telegram?.WebApp) {
+          window.Telegram.WebApp.showAlert('Ошибка при начислении баллов. Проверьте подключение к интернету.');
+        }
+      }
     } else {
       console.log('ℹ️ Start param не передан');
     }
