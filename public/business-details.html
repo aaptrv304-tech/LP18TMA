@@ -64,20 +64,16 @@
 </head>
 
 <body>
-    <!-- 🔥 ТОЛЬКО СОДЕРЖИМОЕ БЕЗ ВНЕШНЕГО КОНТЕЙНЕРА 🔥 -->
     <div id="app-container" class="w-full bg-white min-h-screen">
 
-        <!-- Hero Header -->
         <section id="hero-header" class="relative h-[280px] overflow-hidden">
             <div class="hero-gradient absolute inset-0"></div>
 
-            <!-- Back Button -->
             <button id="back-button"
                 class="absolute top-24 left-4 z-20 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg">
                 <i class="fa-solid fa-arrow-left text-white text-lg"></i>
             </button>
 
-            <!-- Favorite Button -->
             <button id="favorite-button"
                 class="absolute top-24 right-4 z-20 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg">
                 <i class="fa-solid fa-star text-yellow-400 text-lg"></i>
@@ -107,11 +103,8 @@
             </div>
         </section>
 
-        <!-- Main Content -->
         <main id="main-content" class="relative -mt-4 bg-white rounded-t-3xl">
-            <!-- Info Cards -->
             <section id="info-cards-section" class="px-4 pt-6 space-y-3">
-                <!-- Адрес -->
                 <div class="info-card bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
                     <div class="flex items-start gap-3">
                         <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0">
@@ -127,7 +120,6 @@
                     </div>
                 </div>
 
-                <!-- Режим работы -->
                 <div class="info-card bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
                     <div class="flex items-start gap-3">
                         <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center flex-shrink-0">
@@ -150,7 +142,6 @@
                     </div>
                 </div>
 
-                <!-- Контакт -->
                 <div class="info-card bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
                     <div class="flex items-start gap-3">
                         <div class="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center flex-shrink-0">
@@ -167,7 +158,6 @@
                 </div>
             </section>
 
-            <!-- User Stats -->
             <section id="user-stats-section" class="px-4 pt-6">
                 <h2 class="text-textPrimary text-xl font-bold mb-3">Вы здесь</h2>
                 <div class="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl p-5 border border-orange-100">
@@ -221,14 +211,12 @@
                 </div>
             </section>
 
-            <!-- Rewards Section -->
             <section id="rewards-section" class="px-4 pt-6">
                 <div class="flex items-center justify-between mb-3">
                     <h2 class="text-textPrimary text-xl font-bold">Награды в этом заведении</h2>
                     <button class="text-primary text-sm font-medium">Все</button>
                 </div>
                 <div class="flex gap-3 overflow-x-auto pb-2">
-                    <!-- Награда 1 -->
                     <div
                         class="reward-card flex-shrink-0 w-[160px] bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                         <div
@@ -250,7 +238,6 @@
                         </div>
                     </div>
 
-                    <!-- Награда 2 -->
                     <div
                         class="reward-card flex-shrink-0 w-[160px] bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                         <div
@@ -272,7 +259,6 @@
                         </div>
                     </div>
 
-                    <!-- Награда 3 -->
                     <div
                         class="reward-card flex-shrink-0 w-[160px] bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden opacity-75">
                         <div
@@ -295,7 +281,6 @@
                         </div>
                     </div>
 
-                    <!-- Награда 4 -->
                     <div
                         class="reward-card flex-shrink-0 w-[160px] bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden opacity-75">
                         <div
@@ -320,7 +305,6 @@
                 </div>
             </section>
 
-            <!-- Quick Actions -->
             <section id="quick-actions-section" class="px-4 pt-6">
                 <h2 class="text-textPrimary text-xl font-bold mb-3">Быстрые действия</h2>
                 <div class="grid grid-cols-2 gap-3">
@@ -337,7 +321,6 @@
                 </div>
             </section>
 
-            <!-- About Section -->
             <section id="about-section" class="px-4 pt-6">
                 <h2 class="text-textPrimary text-xl font-bold mb-3">О заведении</h2>
                 <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
@@ -361,63 +344,8 @@
                     </div>
                 </div>
             </section>
-
-            <!-- Reviews Section -->
-            <section id="reviews-section" class="px-4 pt-6">
-                <div class="flex items-center justify-between mb-3">
-                    <h2 class="text-textPrimary text-xl font-bold">Отзывы</h2>
-                    <button class="text-primary text-sm font-medium">Все 120</button>
-                </div>
-                <div class="space-y-3">
-                    <!-- Review 1 -->
-                    <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-                        <div class="flex items-center gap-3 mb-3">
-                            <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg"
-                                alt="User" class="w-10 h-10 rounded-full object-cover">
-                            <div class="flex-1 min-w-0">
-                                <p class="text-textPrimary font-semibold text-sm">Анна Петрова</p>
-                                <div class="flex items-center gap-1">
-                                    <i class="fa-solid fa-star text-yellow-400 text-xs"></i>
-                                    <i class="fa-solid fa-star text-yellow-400 text-xs"></i>
-                                    <i class="fa-solid fa-star text-yellow-400 text-xs"></i>
-                                    <i class="fa-solid fa-star text-yellow-400 text-xs"></i>
-                                    <i class="fa-solid fa-star text-yellow-400 text-xs"></i>
-                                </div>
-                            </div>
-                            <span class="text-textSecondary text-xs">2 дня назад</span>
-                        </div>
-                        <p class="text-textSecondary text-sm leading-relaxed">
-                            Отличное место! Вкусный кофе и приятная атмосфера. Программа лояльности очень удобная,
-                            накапливаю баллы с каждым визитом.
-                        </p>
-                    </div>
-
-                    <!-- Review 2 -->
-                    <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-                        <div class="flex items-center gap-3 mb-3">
-                            <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg"
-                                alt="User" class="w-10 h-10 rounded-full object-cover">
-                            <div class="flex-1 min-w-0">
-                                <p class="text-textPrimary font-semibold text-sm">Дмитрий Смирнов</p>
-                                <div class="flex items-center gap-1">
-                                    <i class="fa-solid fa-star text-yellow-400 text-xs"></i>
-                                    <i class="fa-solid fa-star text-yellow-400 text-xs"></i>
-                                    <i class="fa-solid fa-star text-yellow-400 text-xs"></i>
-                                    <i class="fa-solid fa-star text-yellow-400 text-xs"></i>
-                                    <i class="fa-regular fa-star text-gray-300 text-xs"></i>
-                                </div>
-                            </div>
-                            <span class="text-textSecondary text-xs">5 дней назад</span>
-                        </div>
-                        <p class="text-textSecondary text-sm leading-relaxed">
-                            Хорошее кафе, вкусная выпечка. Удобно копить баллы через приложение. Рекомендую!
-                        </p>
-                    </div>
-                </div>
-            </section>
         </main>
 
-        <!-- Telegram WebApp Script -->
         <script src="https://telegram.org/js/telegram-web-app.js"></script>
     </div>
 </body>
