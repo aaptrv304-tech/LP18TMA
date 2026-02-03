@@ -384,8 +384,8 @@ const showBonusNotification = (shopName: string, points: number) => {
 const initHomePage = async () => {
   console.log('🏠 Главная страница загружена');
 
-  // Сразу скрываем лоадер (на случай ошибок)
-  showLoader(false);
+  // 🔥 ПОКАЗЫВАЕМ ЛОАДЕР СРАЗУ ПРИ ОТКРЫТИИ 🔥
+  showLoader(true);
 
   // Проверяем доступность Telegram WebApp
   if (window.Telegram?.WebApp) {
@@ -407,7 +407,7 @@ const initHomePage = async () => {
     if (startParam) {
       console.log('✅ Start param:', startParam);
 
-      // 🔥 ОТПРАВЛЯЕМ ЗАПРОС НА НАЧИСЛЕНИЕ БАЛЛОВ 🔥
+      // 🔥 ОБРАБАТЫВАЕМ ВИЗИТ В ФОНЕ 🔥
       try {
         const response = await fetch(getAPIUrl('/api/visit'), {
           method: 'POST',
@@ -422,27 +422,34 @@ const initHomePage = async () => {
           const result = await response.json();
           console.log('✅ Visit processed:', result);
 
-          // Показываем уведомление с реальными данными с бэкенда
-          showBonusNotification(result.visit.business_name, result.visit.points_earned);
+          // 🔥 НЕ ПОКАЗЫВАЕМ УВЕДОМЛЕНИЕ СРАЗУ — ЗАПОМИНАЕМ ДЛЯ ПОСЛЕ ЗАГРУЗКИ 🔥
+          const visitResult = result.visit;
 
-          // Обновляем данные после начисления
-          setTimeout(async () => {
-            await loadAllData();
-          }, 1500);
+          // Загружаем данные
+          await loadAllData();
+
+          // 🔥 ТЕПЕРЬ ПОКАЗЫВАЕМ УВЕДОМЛЕНИЕ 🔥
+          setTimeout(() => {
+            showBonusNotification(visitResult.business_name, visitResult.points_earned);
+          }, 300);
+
+          return; // Выходим из функции — данные уже загружены
         } else if (response.status === 429) {
-          // 🔥 ПОКАЗЫВАЕМ КРАСИВОЕ ПРЕДУПРЕЖДЕНИЕ 🔥
           const error = await response.json();
           console.log('⏳ Too early for next visit:', error);
 
-          // Извлекаем часы из сообщения или используем 24 по умолчанию
-          let hoursLeft = 24;
-          const match = error.message?.match(/(\d+) hours/);
-          if (match) {
-            hoursLeft = parseInt(match[1]);
-          }
+          // Извлекаем часы из сообщения
+          let hoursLeft = error.hours_left || 24;
 
-          // Показываем красивое уведомление
-          showVisitWarning(error.business_name || 'Заведение', hoursLeft);
+          // Загружаем данные
+          await loadAllData();
+
+          // Показываем предупреждение
+          setTimeout(() => {
+            showVisitWarning(error.business_name || 'Заведение', hoursLeft);
+          }, 300);
+
+          return; // Выходим из функции — данные уже загружены
         } else {
           const error = await response.json();
           console.error('❌ Visit failed:', error);
@@ -463,7 +470,7 @@ const initHomePage = async () => {
     console.warn('⚠️ Режим разработки (не в Telegram)');
   }
 
-  // Загружаем данные с бэкенда
+  // 🔥 ЗАГРУЖАЕМ ДАННЫЕ (если не было обработки визита) 🔥
   try {
     await loadAllData();
   } catch (error) {
@@ -480,8 +487,7 @@ const loadAllData = async () => {
   try {
     console.log('📥 Загрузка данных с бэкенда...');
 
-    // Показываем лоадер
-    showLoader(true);
+    // Лоадер уже показан в initHomePage, не нужно показывать снова
 
     // Загружаем заведения и статистику
     const businessesData = await fetchBusinesses();
@@ -517,6 +523,7 @@ const loadAllData = async () => {
       window.Telegram.WebApp.showAlert(`Ошибка: ${errorMessage}`);
     }
   } finally {
+    // 🔥 СКРЫВАЕМ ЛОАДЕР В КОНЦЕ 🔥
     showLoader(false);
   }
 };
