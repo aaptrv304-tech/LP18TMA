@@ -837,17 +837,32 @@ const showLoader = (show: boolean) => {
 };
 
 const setupEventListeners = () => {
-  // Обработчики кликов по карточкам заведений
-  const businessCards = document.querySelectorAll('.business-card');
-  businessCards.forEach((card, index) => {
-    card.addEventListener('click', () => {
-      if (businesses && businesses[index]) {
+  console.log('🔧 Setting up event listeners...');
+
+  // 🔥 ДЕЛЕГИРОВАНИЕ СОБЫТИЙ (работает для динамически созданных элементов) 🔥
+  document.addEventListener('click', (e) => {
+    const card = (e.target as HTMLElement).closest('.business-card');
+    if (card) {
+      // Находим индекс карточки
+      const cards = document.querySelectorAll('.business-card');
+      const index = Array.from(cards).indexOf(card);
+
+      console.log('🏢 Business card clicked! Index:', index);
+      console.log('📊 Businesses array length:', businesses.length);
+
+      if (index >= 0 && businesses[index]) {
+        console.log('✅ Showing details for:', businesses[index].name);
         showBusinessDetails(businesses[index]);
+      } else {
+        console.error('❌ Business not found at index', index);
+        if (window.Telegram?.WebApp) {
+          window.Telegram.WebApp.showAlert('Ошибка: данные о заведении не загружены');
+        }
       }
-    });
+    }
   });
 
-  // Обработчики нижней навигации
+  // Обработчики нижней навигации (оставляем как есть)
   const navButtons = document.querySelectorAll('#bottom-nav button');
   navButtons.forEach((button, index) => {
     button.addEventListener('click', () => {
@@ -898,6 +913,6 @@ initHomePage().catch((error) => {
   }
 });
 
-// Делаем вспомогательные функции доступными глобально для других модулей
+// Экспортируем вспомогательные функции для других модулей
 (window as any).showLoader = showLoader;
 (window as any).showError = showError;

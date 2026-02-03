@@ -13,8 +13,14 @@ let cachedBusinessDetailsHTML: string | null = null;
 export const showBusinessDetails = async (business: Business) => {
     currentBusiness = business;
 
+
+
     const screen = document.getElementById('business-details-screen');
-    if (!screen) return;
+    if (!screen) {
+        console.error('❌ #business-details-screen not found in DOM!');
+        showError('Ошибка: контейнер деталей не найден');
+        return;
+    }
 
     showLoader(true);
 
