@@ -829,10 +829,10 @@ const showLoader = (show: boolean) => {
 const setupEventListeners = () => {
   // Обработчики кликов по карточкам заведений
   const businessCards = document.querySelectorAll('.business-card');
-  businessCards.forEach((card, index) => {
+  businessCards.forEach((card) => {
     card.addEventListener('click', () => {
-      console.log(`🏢 Клик по карточке #${index + 1}`);
-      alert(`Вы выбрали заведение "${card.querySelector('h3')?.textContent}"`);
+      // 🔥 ПЕРЕХОД НА СТРАНИЦУ ДЕТАЛЕЙ 🔥
+      window.location.href = 'business-details.html';
     });
   });
 
