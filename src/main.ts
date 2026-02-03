@@ -22,6 +22,192 @@ import {
   type Recommendation
 } from './api';
 
+// Показ красивого уведомления о повторном посещении
+const showVisitWarning = (shopName: string, hoursLeft: number) => {
+  try {
+    // Создаём оверлей
+    const overlay = document.createElement('div');
+    overlay.id = 'warning-overlay';
+    overlay.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      z-index: 999999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    `;
+
+    // Создаём карточку
+    const card = document.createElement('div');
+    card.style.cssText = `
+      background: linear-gradient(135deg, #FF9E6D 0%, #FF6B35 100%); /* Оранжевый градиент (предупреждение) */
+      border-radius: 24px;
+      padding: 40px 32px;
+      text-align: center;
+      max-width: 320px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(255, 107, 53, 0.4);
+      transform: scale(0.8);
+      opacity: 0;
+    `;
+
+    // Иконка с анимацией
+    const icon = document.createElement('div');
+    icon.style.cssText = `
+      width: 80px;
+      height: 80px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto 24px;
+      box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
+    `;
+    icon.innerHTML = '<i class="fa-solid fa-clock text-primary text-4xl"></i>';
+
+    // Заголовок
+    const title = document.createElement('h2');
+    title.style.cssText = `
+      color: white;
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0 0 8px 0;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    `;
+    title.textContent = '⏳ Подождите!';
+
+    // Название заведения
+    const shop = document.createElement('p');
+    shop.style.cssText = `
+      color: rgba(255, 255, 255, 0.95);
+      font-size: 16px;
+      margin: 0 0 16px 0;
+      font-weight: 500;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    `;
+    shop.textContent = shopName;
+
+    // Текст предупреждения
+    const warningText = document.createElement('p');
+    warningText.style.cssText = `
+      color: white;
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 0 0 24px 0;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    `;
+    warningText.innerHTML = `Вы уже получали бонусы в этом заведении.<br>Следующий визит доступен через:`;
+
+    // Таймер с анимацией
+    const timerContainer = document.createElement('div');
+    timerContainer.style.cssText = `
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 16px;
+      padding: 16px;
+      margin: 24px 0;
+    `;
+
+    const timerText = document.createElement('span');
+    timerText.style.cssText = `
+      color: white;
+      font-size: 48px;
+      font-weight: 800;
+      display: block;
+      text-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
+    `;
+    timerText.textContent = `${hoursLeft}ч`;
+
+    const timerLabel = document.createElement('span');
+    timerLabel.style.cssText = `
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 14px;
+      display: block;
+      margin-top: 4px;
+      font-weight: 500;
+    `;
+    timerLabel.textContent = 'осталось';
+
+    timerContainer.appendChild(timerText);
+    timerContainer.appendChild(timerLabel);
+
+    // Кнопка закрытия
+    const button = document.createElement('button');
+    button.style.cssText = `
+      background: white;
+      color: #FF6B35;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 40px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 16px;
+      box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+      transition: all 0.2s ease;
+    `;
+    button.textContent = 'Понятно!';
+
+    // Эффекты при наведении/нажатии
+    button.addEventListener('touchstart', () => {
+      button.style.transform = 'scale(0.95)';
+      button.style.boxShadow = '0 2px 10px rgba(255, 107, 53, 0.4)';
+    });
+
+    button.addEventListener('touchend', () => {
+      button.style.transform = 'scale(1)';
+      button.style.boxShadow = '0 4px 15px rgba(255, 107, 53, 0.3)';
+    });
+
+    button.addEventListener('click', () => {
+      overlay.style.opacity = '0';
+      setTimeout(() => {
+        document.body.removeChild(overlay);
+      }, 300);
+    });
+
+    // Собираем карточку
+    card.appendChild(icon);
+    card.appendChild(title);
+    card.appendChild(shop);
+    card.appendChild(warningText);
+    card.appendChild(timerContainer);
+    card.appendChild(button);
+
+    // Добавляем в оверлей
+    overlay.appendChild(card);
+    document.body.appendChild(overlay);
+
+    // Анимация появления
+    setTimeout(() => {
+      overlay.style.opacity = '1';
+      card.style.transform = 'scale(1)';
+      card.style.opacity = '1';
+    }, 10);
+
+    // Автозакрытие через 5 секунд
+    setTimeout(() => {
+      if (document.body.contains(overlay)) {
+        button.click();
+      }
+    }, 5000);
+
+  } catch (error) {
+    console.error('❌ Ошибка показа предупреждения:', error);
+    // Резервный вариант - простое уведомление
+    if (window.Telegram?.WebApp) {
+      window.Telegram.WebApp.showAlert(`⏳ Подождите!\nСледующий визит доступен через ${hoursLeft} часов.`);
+    }
+  }
+};
+
 const showBonusNotification = (shopName: string, points: number) => {
   try {
     // Создаём оверлей
@@ -244,16 +430,26 @@ const initHomePage = async () => {
           setTimeout(async () => {
             await loadAllData();
           }, 1500);
+        } else if (response.status === 429) {
+          // 🔥 ПОКАЗЫВАЕМ КРАСИВОЕ ПРЕДУПРЕЖДЕНИЕ 🔥
+          const error = await response.json();
+          console.log('⏳ Too early for next visit:', error);
+
+          // Извлекаем часы из сообщения или используем 24 по умолчанию
+          let hoursLeft = 24;
+          const match = error.message?.match(/(\d+) hours/);
+          if (match) {
+            hoursLeft = parseInt(match[1]);
+          }
+
+          // Показываем красивое уведомление
+          showVisitWarning(error.business_name || 'Заведение', hoursLeft);
         } else {
           const error = await response.json();
           console.error('❌ Visit failed:', error);
 
           // Показываем ошибку пользователю
-          if (error.error?.includes('Слишком рано')) {
-            tg.showAlert('⏳ Слишком рано для следующего визита!\nМежду визитами должно пройти не менее 24 часов.');
-          } else {
-            tg.showAlert(`Ошибка: ${error.error || 'Неизвестная ошибка'}`);
-          }
+          tg.showAlert(`Ошибка: ${error.error || 'Неизвестная ошибка'}`);
         }
       } catch (error) {
         console.error('❌ Error processing visit:', error);
