@@ -1,7 +1,7 @@
 // Конфигурация API
 export const API_CONFIG = {
     // Твой ngrok URL
-    baseURL: 'https://explicitly-shipment-instead-comparing.trycloudflare.com',
+    baseURL: 'https://cir-share-watch-less.trycloudflare.com ',
     endpoints: {
         businesses: '/api/businesses',
         activity: '/api/activity',
