@@ -831,8 +831,8 @@ const setupEventListeners = () => {
   const businessCards = document.querySelectorAll('.business-card');
   businessCards.forEach((card) => {
     card.addEventListener('click', () => {
-      // 🔥 ПЕРЕХОД НА СТРАНИЦУ ДЕТАЛЕЙ 🔥
-      window.location.href = 'business-details.html';
+      // 🔥 ПЕРЕХОД НА СТРАНИЦУ ДЕТАЛЕЙ (через public) 🔥
+      window.location.href = '/business-details.html';
     });
   });
 
