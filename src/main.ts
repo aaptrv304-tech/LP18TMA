@@ -391,7 +391,7 @@ const initHomePage = async () => {
   if (window.Telegram?.WebApp) {
     const tg = window.Telegram.WebApp;
     tg.expand();
-    tg.setHeaderColor('#E65A2B');
+    tg.setHeaderColor('#FF9550');
     tg.setBackgroundColor('#FAFAFA');
 
     // 🔥 ОТКЛЮЧАЕМ ВЕРТИКАЛЬНЫЕ СВАЙПЫ 🔥
