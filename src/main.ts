@@ -47,7 +47,7 @@ const showVisitWarning = (shopName: string, hoursLeft: number) => {
     // Создаём карточку
     const card = document.createElement('div');
     card.style.cssText = `
-      background: linear-gradient(135deg, #FF9E6D 0%, #FF6B35 100%); /* Оранжевый градиент (предупреждение) */
+      background: linear-gradient(135deg, #FF9E6D 0%, #FF6B35 100%);
       border-radius: 24px;
       padding: 40px 32px;
       text-align: center;
@@ -192,16 +192,15 @@ const showVisitWarning = (shopName: string, hoursLeft: number) => {
       card.style.opacity = '1';
     }, 10);
 
-    // Автозакрытие через 5 секунд
+    // 🔥 АВТОЗАКРЫТИЕ ЧЕРЕЗ 10 СЕКУНД ВМЕСТО 5 🔥
     setTimeout(() => {
       if (document.body.contains(overlay)) {
         button.click();
       }
-    }, 5000);
+    }, 10000);
 
   } catch (error) {
     console.error('❌ Ошибка показа предупреждения:', error);
-    // Резервный вариант - простое уведомление
     if (window.Telegram?.WebApp) {
       window.Telegram.WebApp.showAlert(`⏳ Подождите!\nСледующий визит доступен через ${hoursLeft} часов.`);
     }
@@ -365,12 +364,12 @@ const showBonusNotification = (shopName: string, points: number) => {
       card.style.opacity = '1';
     }, 10);
 
-    // Автозакрытие через 4 секунды
+    // Автозакрытие через 10 секунд
     setTimeout(() => {
       if (document.body.contains(overlay)) {
         button.click();
       }
-    }, 4000);
+    }, 10000);
 
   } catch (error) {
     console.error('❌ Ошибка показа бонуса:', error);
