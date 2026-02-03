@@ -13,14 +13,20 @@ import {
   fetchActivity,
   fetchAchievements,
   fetchRecommendations,
-  getAPIUrl,              // ← ДОБАВЛЕНО
-  getTelegramInitData,    // ← ДОБАВЛЕНО
+  getAPIUrl,
+  getTelegramInitData,
   type BusinessResponse,
   type Business,
   type Activity,
   type Achievement,
   type Recommendation
 } from './api';
+
+// 🔥 ИМПОРТИРУЕМ ТОЛЬКО НУЖНУЮ ФУНКЦИЮ 🔥
+import { showBusinessDetails } from './business-details';
+
+// Глобальные переменные
+let businesses: Business[] = [];
 
 // Показ красивого уведомления о повторном посещении
 const showVisitWarning = (shopName: string, hoursLeft: number) => {
@@ -576,6 +582,10 @@ const renderBusinesses = (data: BusinessResponse) => {
       businesses: [],
       stats: data?.stats || { total_points: 0, total_businesses: 0, total_visits: 0, total_rewards: 0 }
     };
+    // 🔥 СОХРАНЯЕМ ДАННЫЕ ДЛЯ МАРШРУТИЗАЦИИ 🔥
+    if (data && data.businesses) {
+      businesses = data.businesses;
+    }
   }
 
   // Обновляем статистику
@@ -829,10 +839,11 @@ const showLoader = (show: boolean) => {
 const setupEventListeners = () => {
   // Обработчики кликов по карточкам заведений
   const businessCards = document.querySelectorAll('.business-card');
-  businessCards.forEach((card) => {
+  businessCards.forEach((card, index) => {
     card.addEventListener('click', () => {
-      // 🔥 ПЕРЕХОД НА СТРАНИЦУ ДЕТАЛЕЙ (через public) 🔥
-      window.location.href = '/business-details.html';
+      if (businesses && businesses[index]) {
+        showBusinessDetails(businesses[index]);
+      }
     });
   });
 
@@ -886,3 +897,7 @@ initHomePage().catch((error) => {
     window.Telegram.WebApp.showAlert('Ошибка запуска приложения. Попробуйте перезапустить.');
   }
 });
+
+// Делаем вспомогательные функции доступными глобально для других модулей
+(window as any).showLoader = showLoader;
+(window as any).showError = showError;
