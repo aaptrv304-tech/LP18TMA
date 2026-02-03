@@ -87,14 +87,19 @@ const setupBusinessDetailsContent = (business: Business) => {
         lastVisit.textContent = business.last_visit;
     }
 
-    // Кнопка "Назад"
-    const backBtn = document.getElementById('back-from-details');
+    // 🔥 Кнопка "Назад" - ИСПРАВЛЕННЫЙ ID 🔥
+    const backBtn = document.getElementById('back-button');
     if (backBtn) {
-        backBtn.onclick = hideBusinessDetails;
+        backBtn.onclick = () => {
+            console.log('🔙 Back button clicked - returning to home');
+            hideBusinessDetails();
+        };
+    } else {
+        console.error('❌ Back button (#back-button) not found!');
     }
 
-    // Кнопка "Избранное"
-    const favBtn = document.getElementById('favorite-details');
+    // 🔥 Кнопка "Избранное" - ИСПРАВЛЕННЫЙ ID 🔥
+    const favBtn = document.getElementById('favorite-button');
     if (favBtn) {
         const icon = favBtn.querySelector('i');
         if (icon) {

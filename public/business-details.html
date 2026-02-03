@@ -276,36 +276,7 @@
 
         <!-- Telegram WebApp Script -->
         <script src="https://telegram.org/js/telegram-web-app.js"></script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const tg = window.Telegram?.WebApp;
-                if (tg) {
-                    tg.expand();
-                    tg.setHeaderColor('#FF6B35');
-                    tg.setBackgroundColor('#FAFAFA');
-                }
 
-                // Кнопка "Назад"
-                document.getElementById('back-button').addEventListener('click', () => {
-                    window.history.back();
-                });
-
-                // Кнопка "Избранное"
-                const favoriteBtn = document.getElementById('favorite-button');
-                let isFavorite = false;
-                favoriteBtn.addEventListener('click', () => {
-                    isFavorite = !isFavorite;
-                    const icon = favoriteBtn.querySelector('i');
-                    if (isFavorite) {
-                        icon.classList.remove('fa-regular');
-                        icon.classList.add('fa-solid', 'text-yellow-400');
-                    } else {
-                        icon.classList.remove('fa-solid', 'text-yellow-400');
-                        icon.classList.add('fa-regular');
-                    }
-                });
-            });
-        </script>
     </div>
 </body>
 
