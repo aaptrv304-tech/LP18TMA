@@ -13,6 +13,11 @@ let cachedBusinessDetailsHTML: string | null = null;
 export const showBusinessDetails = async (business: Business) => {
     currentBusiness = business;
 
+    // 🔥 СКРЫВАЕМ НАВИГАЦИОННЫЙ БАР ГЛАВНОЙ СТРАНИЦЫ 🔥
+    const mainBottomNav = document.querySelector('#bottom-nav');
+    if (mainBottomNav) {
+        mainBottomNav.classList.add('hidden');
+    }
 
 
     const screen = document.getElementById('business-details-screen');
@@ -128,10 +133,26 @@ const setupBusinessDetailsContent = (business: Business) => {
 
 // Скрытие деталей
 export const hideBusinessDetails = () => {
+    console.log('🔙 Hiding business details...');
+
     const screen = document.getElementById('business-details-screen');
-    if (!screen) return;
+    if (!screen) {
+        console.error('❌ Business details screen not found!');
+        return;
+    }
 
     screen.classList.add('hidden');
+
+    // 🔥 ПОКАЗЫВАЕМ НАВИГАЦИОННЫЙ БАР ГЛАВНОЙ СТРАНИЦЫ 🔥
+    const mainBottomNav = document.querySelector('#bottom-nav');
+    if (mainBottomNav) {
+        mainBottomNav.classList.remove('hidden');
+    }
+
     const mainContent = document.getElementById('main-content');
-    if (mainContent) mainContent.scrollTop = 0;
+    if (mainContent) {
+        mainContent.classList.remove('hidden');
+        mainContent.scrollTop = 0;
+        console.log('✅ Main content shown and scrolled to top');
+    }
 };
