@@ -71,19 +71,23 @@
         <section id="hero-header" class="relative h-[280px] overflow-hidden">
             <div class="hero-gradient absolute inset-0"></div>
 
-            <!-- Back Button -->
-            <button id="back-button"
-                class="absolute top-4 left-4 z-20 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg">
-                <i class="fa-solid fa-arrow-left text-white text-lg"></i>
-            </button>
+            <div class="absolute bottom-0 left-0 right-0 p-6">
+                <!-- Кнопки управления -->
+                <div class="flex items-center justify-between mb-4">
+                    <!-- Back Button -->
+                    <button id="back-button"
+                        class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg">
+                        <i class="fa-solid fa-arrow-left text-primary text-lg"></i>
+                    </button>
 
-            <!-- Favorite Button -->
-            <button id="favorite-button"
-                class="absolute top-4 right-4 z-20 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg">
-                <i class="fa-solid fa-star text-yellow-400 text-lg"></i>
-            </button>
+                    <!-- Favorite Button -->
+                    <button id="favorite-button"
+                        class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg">
+                        <i class="fa-solid fa-star text-yellow-400 text-lg"></i>
+                    </button>
+                </div>
 
-            <div class="absolute bottom-0 left-0 right-0 p-6 pb-8">
+                <!-- Название заведения -->
                 <div class="flex items-end gap-4">
                     <div
                         class="w-20 h-20 bg-white rounded-full flex items-center justify-center text-primary text-3xl font-bold shadow-xl border-4 border-white flex-shrink-0">
