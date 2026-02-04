@@ -1,7 +1,7 @@
 // Конфигурация API
 export const API_CONFIG = {
     // Твой ngrok URL
-    baseURL: 'https://cir-share-watch-less.trycloudflare.com',
+    baseURL: 'https://managers-undertaken-monitor-allowing.trycloudflare.com',
     endpoints: {
         businesses: '/api/businesses',
         activity: '/api/activity',
