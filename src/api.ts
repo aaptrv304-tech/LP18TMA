@@ -24,6 +24,10 @@ export interface Business {
     is_favorite: boolean;
     has_reward: boolean;
     badge: string;
+    phone?: string;           // ← ДОБАВИЛИ
+    description?: string;     // ← ДОБАВИЛИ
+    shop_param?: string;      // ← ДОБАВИЛИ
+    visits_count?: number;    // ← ДОБАВИЛИ
 }
 
 export interface UserStats {
@@ -167,3 +171,49 @@ export const checkBackendHealth = async (): Promise<boolean> => {
 
 export { getAPIUrl, getTelegramInitData };
 
+// Типы для деталей заведения
+export interface BusinessDetailsResponse {
+    business: Business;
+    rewards?: Reward[];
+}
+
+export interface Reward {
+    id: number;
+    business_id: number;
+    name: string;
+    description: string;
+    points_cost: number;
+    is_active: boolean;
+}
+
+// Получение деталей заведения по shop_param
+export const fetchBusinessDetails = async (shopParam: string): Promise<BusinessDetailsResponse> => {
+    const url = getAPIUrl(`/api/businesses/${shopParam}`);
+    console.log('📡 [fetchBusinessDetails] Запрос к:', url);
+
+    try {
+        const response = await apiFetch(url);
+        console.log('📡 [fetchBusinessDetails] Статус:', response.status);
+
+        const text = await response.text();
+        console.log('📡 [fetchBusinessDetails] Тело ответа (первые 500 символов):', text.substring(0, 500));
+
+        if (!response.ok) {
+            console.error('❌ [fetchBusinessDetails] Ошибка ответа:', text);
+            throw new Error(`HTTP ${response.status}: ${text.substring(0, 200)}`);
+        }
+
+        try {
+            const data = JSON.parse(text);
+            console.log('✅ [fetchBusinessDetails] JSON успешно распарсен:', data);
+            return data;
+        } catch (parseError) {
+            console.error('❌ [fetchBusinessDetails] Ошибка парсинга JSON:', parseError);
+            console.error('❌ [fetchBusinessDetails] Невалидный текст:', text);
+            throw new Error(`Невалидный JSON: ${text.substring(0, 200)}`);
+        }
+    } catch (error: any) {
+        console.error('❌ [fetchBusinessDetails] Общая ошибка:', error);
+        throw error;
+    }
+};
