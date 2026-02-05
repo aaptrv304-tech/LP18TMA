@@ -1,7 +1,7 @@
 // Конфигурация API
 export const API_CONFIG = {
     // Твой ngrok URL
-    baseURL: 'https://managers-undertaken-monitor-allowing.trycloudflare.com',
+    baseURL: 'https://branches-comes-month-substance.trycloudflare.com',
     endpoints: {
         businesses: '/api/businesses',
         activity: '/api/activity',
