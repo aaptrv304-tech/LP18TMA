@@ -8,21 +8,13 @@ declare function showError(message: string): void;
 export let currentBusiness: Business | null = null;
 let cachedBusinessDetailsHTML: string | null = null;
 
-// Загрузка и показ деталей заведения
 export const showBusinessDetails = async (business: Business) => {
     currentBusiness = business;
 
-    // 🔥 ПРОВЕРКА НАЛИЧИЯ shop_param 🔥
     if (!business.shop_param) {
         console.error('❌ Business shop_param is missing!');
         showError('Ошибка: не удалось определить заведение');
         return;
-    }
-
-    // Скрываем навигационный бар главной страницы
-    const mainBottomNav = document.querySelector('#bottom-nav');
-    if (mainBottomNav) {
-        mainBottomNav.classList.add('hidden');
     }
 
     const screen = document.getElementById('business-details-screen');
@@ -35,22 +27,27 @@ export const showBusinessDetails = async (business: Business) => {
     showLoader(true);
 
     try {
-        // 🔥 ЗАГРУЖАЕМ ДАННЫЕ С СЕРВЕРА (гарантированно строка) 🔥
         console.log('📥 Loading business details for:', business.name, 'shop_param:', business.shop_param);
-        const data = await fetchBusinessDetails(business.shop_param); // Теперь точно строка!
+        const data = await fetchBusinessDetails(business.shop_param);
         console.log('✅ Business details loaded:', data);
 
-        // Обновляем бизнес данными с сервера
+        // ✅ СОХРАНЯЕМ БИЗНЕС И ЯВНО ДОБАВЛЯЕМ НАГРАДЫ
         currentBusiness = data.business;
 
-        // Кэшируем HTML
+        // ✅ ДОБАВЛЯЕМ НАГРАДЫ КАК ДИНАМИЧЕСКОЕ СВОЙСТВО
+        // @ts-ignore
+        currentBusiness.rewards = data.rewards || [];
+
+        console.log('💾 currentBusiness with rewards:', currentBusiness);
+        // @ts-ignore
+        console.log('💾 rewards in currentBusiness:', currentBusiness.rewards);
+
         if (!cachedBusinessDetailsHTML) {
             const response = await fetch('/business-details.html');
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             cachedBusinessDetailsHTML = await response.text();
         }
 
-        // Вставляем HTML и настраиваем контент
         screen.innerHTML = cachedBusinessDetailsHTML;
         setupBusinessDetailsContent(currentBusiness);
         screen.classList.remove('hidden');
