@@ -1,7 +1,7 @@
 // Конфигурация API
 export const API_CONFIG = {
     // Твой ngrok URL
-    baseURL: 'https://deaf-bathrooms--forgotten.trycloudflare.com',
+    baseURL: 'https://lucky-solomon-returns-approach.trycloudflare.com',
     endpoints: {
         businesses: '/api/businesses',
         activity: '/api/activity',
