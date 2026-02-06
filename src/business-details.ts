@@ -107,6 +107,9 @@ const setupBusinessDetailsContent = (business: Business) => {
         descriptionText.textContent = business.description || 'Информация о заведении временно недоступна';
     }
 
+    // ✅ ОТОБРАЖАЕМ НАГРАДЫ
+    renderRewards(currentBusiness);
+
     // === КНОПКИ ===
     // Кнопка "Назад"
     const backBtn = document.getElementById('back-button');
@@ -146,6 +149,136 @@ const setupBusinessDetailsContent = (business: Business) => {
             console.log('⭐ Favorite toggled:', currentBusiness.is_favorite);
         };
     }
+};
+
+// ✅ НОВАЯ ФУНКЦИЯ — рендеринг наград
+const renderRewards = (business: Business | null) => {
+    const rewardsSection = document.getElementById('rewards-section');
+    if (!rewardsSection) {
+        console.error('❌ #rewards-section not found!');
+        return;
+    }
+
+    // Получаем данные из загрузки (из fetchBusinessDetails)
+    if (!currentBusiness) {
+        console.log('ℹ️ No current business, skipping rewards render');
+        return;
+    }
+
+    // Проверяем, есть ли награды в данных
+    // @ts-ignore - TypeScript не знает о динамическом свойстве
+    const rewards = currentBusiness['rewards'] || [];
+
+    console.log('🎁 Rewards to render:', rewards);
+
+    // Находим контейнер для карточек наград
+    const rewardsContainer = rewardsSection.querySelector('.flex.gap-3.overflow-x-auto');
+    if (!rewardsContainer) {
+        console.error('❌ Rewards container not found!');
+        return;
+    }
+
+    // Если наград нет — показываем заглушку
+    if (!rewards || rewards.length === 0) {
+        rewardsContainer.innerHTML = `
+            <div class="w-full py-8 text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-orange-100 to-orange-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fa-solid fa-gift text-primary text-3xl"></i>
+                </div>
+                <p class="text-textSecondary text-sm font-medium">Нет доступных наград</p>
+                <p class="text-textSecondary text-xs mt-2">Загляните позже, скоро появятся новые предложения</p>
+            </div>
+        `;
+        return;
+    }
+
+    // ✅ ПОЛУЧАЕМ КОЛИЧЕСТВО БАЛЛОВ С ПРОВЕРКОЙ НА UNDEFINED
+    const userPoints = business?.points ?? 0; // ← ИСПРАВЛЕНО: используем 0 если undefined
+
+    // Рендерим карточки наград
+    let html = '';
+
+    rewards.forEach((reward: any) => {
+        // ✅ ОПРЕДЕЛЯЕМ ДОСТУПНОСТЬ НАГРАДЫ
+        const isAvailable = userPoints >= reward.points_cost;
+        const pointsNeeded = reward.points_cost - userPoints;
+
+        // Цвета для иконок (как в админке)
+        const iconColors: { [key: string]: string } = {
+            'gift': 'from-orange-100 to-orange-200 text-primary',
+            'percent': 'from-purple-100 to-purple-200 text-purple-600',
+            'mug-hot': 'from-green-100 to-green-200 text-green-600',
+            'scissors': 'from-yellow-100 to-yellow-200 text-yellow-600',
+            'star': 'from-red-100 to-red-200 text-red-600',
+            'utensils': 'from-blue-100 to-blue-200 text-blue-600',
+            'spa': 'from-teal-100 to-teal-200 text-teal-600',
+            'crown': 'from-amber-100 to-amber-200 text-amber-600',
+            'cake-candles': 'from-pink-100 to-pink-200 text-pink-600',
+            'tooth': 'from-cyan-100 to-cyan-200 text-cyan-600',
+            'default': 'from-gray-100 to-gray-200 text-gray-600'
+        };
+
+        const iconClass = iconColors[reward.icon || 'gift'] || iconColors['default'];
+        const iconFaClass = getFaIconClass(reward.icon || 'gift');
+
+        html += `
+            <div class="reward-card flex-shrink-0 w-[160px] bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden ${isAvailable ? '' : 'opacity-75'}">
+                <div class="h-[100px] bg-gradient-to-br ${iconClass.split(' ')[0]} ${iconClass.split(' ')[1]} flex items-center justify-center">
+                    <i class="fa-solid ${iconFaClass} ${iconClass.split(' ')[2]} text-4xl"></i>
+                </div>
+                <div class="p-3">
+                    <p class="text-textPrimary font-semibold text-sm mb-1 leading-tight">${reward.name}</p>
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-1">
+                            <i class="fa-solid fa-coins text-yellow-500 text-xs"></i>
+                            <span class="text-textPrimary font-bold text-sm">${reward.points_cost}</span>
+                        </div>
+                        ${isAvailable
+                ? `<span class="px-2 py-0.5 bg-green-50 text-green-600 rounded-md text-xs font-medium">Доступно</span>`
+                : `<span class="px-2 py-0.5 bg-orange-50 text-orange-600 rounded-md text-xs font-medium">Ещё ${pointsNeeded}</span>`
+            }
+                    </div>
+                    <button class="w-full py-2 ${isAvailable ? 'bg-primary text-white' : 'bg-gray-100 text-textSecondary'} rounded-lg text-xs font-medium ${isAvailable ? '' : 'cursor-not-allowed'}">
+                        ${isAvailable ? 'Получить' : 'Недоступно'}
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+
+    rewardsContainer.innerHTML = html;
+
+    // Добавляем обработчики кликов на кнопки "Получить"
+    rewardsContainer.querySelectorAll('button').forEach((button, index) => {
+        button.addEventListener('click', () => {
+            const reward = rewards[index];
+            if (userPoints >= reward.points_cost) {
+                console.log('🎁 Получение награды:', reward);
+                // TODO: Отправить запрос на получение награды
+                alert(`Вы получили награду: ${reward.name}!`);
+            } else {
+                console.log('❌ Недостаточно баллов');
+            }
+        });
+    });
+};
+
+// ✅ ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ — получение класса иконки Font Awesome
+const getFaIconClass = (iconName: string): string => {
+    const icons: { [key: string]: string } = {
+        'gift': 'fa-gift',
+        'percent': 'fa-percent',
+        'mug-hot': 'fa-mug-hot',
+        'scissors': 'fa-scissors',
+        'star': 'fa-star',
+        'utensils': 'fa-utensils',
+        'spa': 'fa-spa',
+        'crown': 'fa-crown',
+        'cake-candles': 'fa-cake-candles',
+        'tooth': 'fa-tooth',
+        'default': 'fa-gift'
+    };
+    return icons[iconName] || icons['default'];
 };
 
 // Обновление статистики пользователя
@@ -228,3 +361,4 @@ export const hideBusinessDetails = () => {
         console.log('✅ Main content shown and scrolled to top');
     }
 };
+
