@@ -1,7 +1,7 @@
 // Конфигурация API
 export const API_CONFIG = {
     // Твой ngrok URL
-    baseURL: 'https://lucky-solomon-returns-approach.trycloudflare.com',
+    baseURL: 'https://motivated-decorating-vii-portable.trycloudflare.com',
     endpoints: {
         businesses: '/api/businesses',
         activity: '/api/activity',
