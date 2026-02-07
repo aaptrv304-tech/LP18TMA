@@ -5,8 +5,12 @@ import { fetchBusinessDetails } from './api'; // ← ИМПОРТИРУЕМ НО
 declare function showLoader(show: boolean): void;
 declare function showError(message: string): void;
 
+// Глобальная переменная для сохранения оригинального стиля
+let originalNavDisplay: string = 'flex';
+
 export let currentBusiness: Business | null = null;
 let cachedBusinessDetailsHTML: string | null = null;
+
 
 export const showBusinessDetails = async (business: Business) => {
     currentBusiness = business;
@@ -31,21 +35,21 @@ export const showBusinessDetails = async (business: Business) => {
         const data = await fetchBusinessDetails(business.shop_param);
         console.log('✅ Business details loaded:', data);
 
-        // ✅ СОХРАНЯЕМ БИЗНЕС И ЯВНО ДОБАВЛЯЕМ НАГРАДЫ
         currentBusiness = data.business;
-
-        // ✅ ДОБАВЛЯЕМ НАГРАДЫ КАК ДИНАМИЧЕСКОЕ СВОЙСТВО
         // @ts-ignore
         currentBusiness.rewards = data.rewards || [];
-
-        console.log('💾 currentBusiness with rewards:', currentBusiness);
-        // @ts-ignore
-        console.log('💾 rewards in currentBusiness:', currentBusiness.rewards);
 
         if (!cachedBusinessDetailsHTML) {
             const response = await fetch('/business-details.html');
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             cachedBusinessDetailsHTML = await response.text();
+        }
+
+        // ✅ СКРЫВАЕМ НАВБАР ЧЕРЕЗ КЛАСС (ТОЛЬКО ОДИН РАЗ!)
+        const mainBottomNav = document.querySelector('#bottom-nav');
+        if (mainBottomNav) {
+            mainBottomNav.classList.add('hidden');
+            console.log('✅ Nav hidden with class');
         }
 
         screen.innerHTML = cachedBusinessDetailsHTML;
@@ -333,7 +337,6 @@ const updateProgress = (business: Business) => {
     }
 };
 
-// Скрытие деталей
 export const hideBusinessDetails = () => {
     console.log('🔙 Hiding business details...');
 
@@ -345,10 +348,11 @@ export const hideBusinessDetails = () => {
 
     screen.classList.add('hidden');
 
-    // Показываем навигационный бар главной страницы
+    // ✅ ПОКАЗЫВАЕМ НАВБАР ЧЕРЕЗ УДАЛЕНИЕ КЛАССА
     const mainBottomNav = document.querySelector('#bottom-nav');
     if (mainBottomNav) {
         mainBottomNav.classList.remove('hidden');
+        console.log('✅ Nav restored');
     }
 
     const mainContent = document.getElementById('main-content');
@@ -358,4 +362,3 @@ export const hideBusinessDetails = () => {
         console.log('✅ Main content shown and scrolled to top');
     }
 };
-
