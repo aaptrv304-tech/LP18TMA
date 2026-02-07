@@ -5,9 +5,6 @@ import { fetchBusinessDetails } from './api'; // ← ИМПОРТИРУЕМ НО
 declare function showLoader(show: boolean): void;
 declare function showError(message: string): void;
 
-// Глобальная переменная для сохранения оригинального стиля
-let originalNavDisplay: string = 'flex';
-
 export let currentBusiness: Business | null = null;
 let cachedBusinessDetailsHTML: string | null = null;
 
