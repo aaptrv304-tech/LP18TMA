@@ -1,7 +1,7 @@
 // Конфигурация API
 export const API_CONFIG = {
     // Твой ngrok URL
-    baseURL: 'https://abraham-plumbing-cas-memphis.trycloudflare.com',
+    baseURL: 'https://proud-karen-pest-damages.trycloudflare.com',
     endpoints: {
         businesses: '/api/businesses',
         activity: '/api/activity',
