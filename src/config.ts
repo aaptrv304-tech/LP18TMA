@@ -1,7 +1,7 @@
 // Конфигурация API
 export const API_CONFIG = {
     // Твой ngrok URL
-    baseURL: 'https://harley-receiver-accounts-containers.trycloudflare.com',
+    baseURL: 'https://moderate-counties-bite-celebrity.trycloudflare.com',
     endpoints: {
         businesses: '/api/businesses',
         activity: '/api/activity',
