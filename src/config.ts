@@ -1,7 +1,7 @@
 // Конфигурация API
 export const API_CONFIG = {
     // Твой ngrok URL
-    baseURL: 'https://moderate-counties-bite-celebrity.trycloudflare.com',
+    baseURL: 'https://pediatric-salt-instantly-watershed.trycloudflare.com',
     endpoints: {
         businesses: '/api/businesses',
         activity: '/api/activity',
